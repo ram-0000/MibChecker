@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/MibChecker.ico</file>
+        <file>res/MibChecker.png</file>
+        <file>res/Folder.png</file>
+        <file>res/Chooser.png</file>
+    </qresource>
+</RCC>
