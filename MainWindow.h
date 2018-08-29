@@ -6,8 +6,9 @@
 #include "ErrorDisplay.h"
 #include "MibCheckerThread.h"
 
-namespace Ui {
-class MainWindow;
+namespace Ui
+{
+	class MainWindow;
 }
 
 class MainWindow : public QMainWindow
@@ -15,7 +16,7 @@ class MainWindow : public QMainWindow
 	Q_OBJECT
 
 public:
-	explicit MainWindow(QWidget *parent = 0);
+	explicit MainWindow(QWidget * parent = nullptr);
 	~MainWindow();
 
 public slots:
@@ -24,6 +25,7 @@ public slots:
 	void onClickInput(QListWidgetItem * item);
 	void onDoubleClickInput(QListWidgetItem * item);
 	void onClickBad(QListWidgetItem * item);
+	void onDoubleClickBad(QListWidgetItem * item);
 	void onEdit(void);
 	void onDelete(void);
 	void onCheck(void);
@@ -58,6 +60,7 @@ private:
 	void _create_menu(void);
 	void _button_state(void);
 	void _fill_algorithm(void);
+	void _selected_file_attribute(FolderManager * folder_manager, QLabel * size_label, QLabel * date_label);
 
 	MibCheckerThread m_thread;
 	bool m_thread_running;
