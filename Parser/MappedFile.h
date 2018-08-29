@@ -18,7 +18,7 @@ public:
 	bool CheckWs(void);
 	bool CheckCrLf(void);
 	bool CheckRange(char first, char last, char * read);
-	bool CheckRange(const char * range, char * read = NULL);
+	bool CheckRange(const char * range, char * read = nullptr);
 
 	bool IsEndOfFile(void) const;
 

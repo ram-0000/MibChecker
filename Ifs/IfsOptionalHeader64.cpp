@@ -31,7 +31,7 @@ IfsOptionalHeader64::~IfsOptionalHeader64(void)
 {
 	for(int boucle = 0; boucle != m_ImageDataDirectory.size(); boucle++)
 	{
-		if(m_ImageDataDirectory[boucle] != NULL)
+		if(m_ImageDataDirectory[boucle] != nullptr)
 			delete m_ImageDataDirectory[boucle];
 	}
 	m_ImageDataDirectory.clear();
@@ -47,7 +47,7 @@ const IfsImageDataDirectory * IfsOptionalHeader64::GetImageDataDirectory(quint16
 	if(p_idx >= m_ImageDataDirectory.size())
 	{
 		FATAL("ImageFileStructureOptionalHeader32: index out of range");
-		return NULL;
+		return nullptr;
 	}
 	return m_ImageDataDirectory[p_idx];
 }

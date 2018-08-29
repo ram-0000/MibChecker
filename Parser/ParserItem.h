@@ -30,7 +30,7 @@ public:
 	// a unique identifier
 	int Id(void) const throw (ParserException);
 
-	// the next item (or NULL if last item)
+	// the next item (or nullptr if last item)
 	ParserItem * Next(void) const throw (ParserException);
 
 	// Update some value in the structure

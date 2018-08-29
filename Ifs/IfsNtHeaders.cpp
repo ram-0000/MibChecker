@@ -28,13 +28,13 @@ IfsNtHeaders::IfsNtHeaders(const void * p_begin)
 	{
 		// 32 bits version
 		m_optional_header32 = new IfsOptionalHeader32(start_optional, size_optional);
-		m_optional_header64 = NULL;
+		m_optional_header64 = nullptr;
 	}
 	else if(magic == 0x20b)
 	{
 		// 64 bits version
 		m_optional_header64 = new IfsOptionalHeader64(start_optional, size_optional);
-		m_optional_header32 = NULL;
+		m_optional_header32 = nullptr;
 	}
 	else
 	{
@@ -47,11 +47,11 @@ IfsNtHeaders::IfsNtHeaders(const void * p_begin)
 
 IfsNtHeaders::~IfsNtHeaders(void)
 {
-	if(m_file_header != NULL)
+	if(m_file_header != nullptr)
 		delete m_file_header;
-	if(m_optional_header32 != NULL)
+	if(m_optional_header32 != nullptr)
 		delete m_optional_header32;
-	if(m_optional_header64 != NULL)
+	if(m_optional_header64 != nullptr)
 		delete m_optional_header64;
 }
 

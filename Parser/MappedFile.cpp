@@ -6,7 +6,7 @@ MappedFile::MappedFile(const QString & name) throw (ParserException)
 	// save filename
 	m_file_name = name;
 	m_file.setFileName(name);
-	m_map = NULL;
+	m_map = nullptr;
 	m_size = 0;
 	m_already_read = 0;
 	m_file_line = 0;
@@ -22,7 +22,7 @@ MappedFile::MappedFile(const QString & name) throw (ParserException)
 	// map the file
 	m_size = m_file.size();
 	m_map = m_file.map(0, m_size);
-	if(m_map == NULL)
+	if(m_map == nullptr)
 	{
 		// unable to map filename
 		throw ParserExceptionMemoryMapping(FileName());
@@ -39,11 +39,11 @@ MappedFile::~MappedFile(void)
 {
 	if(m_file.isOpen() == true)
 	{
-		if(m_map != NULL)
+		if(m_map != nullptr)
 		{
 			// unmap the file
 			m_file.unmap(m_map);
-			m_map = NULL;
+			m_map = nullptr;
 			m_size = 0;
 		}
 		m_file.close();
@@ -53,7 +53,7 @@ MappedFile::~MappedFile(void)
 bool MappedFile::CheckWs(void)
 {
 	const char * current = String();
-	if(current == NULL)
+	if(current == nullptr)
 		return false;
 	if(m_remaining < 1)
 		return false;
@@ -75,7 +75,7 @@ bool MappedFile::CheckWs(void)
 bool MappedFile::CheckCrLf(void)
 {
 	const char * current = String();
-	if(current == NULL)
+	if(current == nullptr)
 		return false;
 	if(m_remaining < 1)
 		return false;
@@ -93,10 +93,10 @@ bool MappedFile::CheckCrLf(void)
 bool MappedFile::Check(const char * str)
 {
 	const char * current = String();
-	if(current == NULL)
+	if(current == nullptr)
 		return false;
 
-	if(str == NULL)
+	if(str == nullptr)
 		return false;
 	size_t len = strlen(str);
 	if(len > m_remaining)
@@ -111,9 +111,9 @@ bool MappedFile::Check(const char * str)
 	return true;
 }
 
-bool MappedFile::CheckRange(const char * range, char * read /*= NULL*/)
+bool MappedFile::CheckRange(const char * range, char * read /*= nullptr*/)
 {
-	if( (range == NULL) || (*range == 0) )
+	if( (range == nullptr) || (*range == 0) )
 		return false;
 	int len = strlen(range);
 	if(IsEndOfFile() == true)
@@ -127,7 +127,7 @@ bool MappedFile::CheckRange(const char * range, char * read /*= NULL*/)
 			continue;
 
 		// found
-		if(read != NULL)
+		if(read != nullptr)
 			*read = carac;
 		Advance();
 		return true;
@@ -146,7 +146,7 @@ bool MappedFile::CheckRange(char first,
 	const char *current = String();
 	char carac = *current;
 
-	if(read != NULL)
+	if(read != nullptr)
 		*read = carac;
 
 	if( (carac < first) ||
@@ -180,7 +180,7 @@ void MappedFile::Advance(quint64 nb /*= 1*/)
 
 bool MappedFile::IsEndOfFile(void) const
 {
-	if(m_current == NULL)
+	if(m_current == nullptr)
 		return true;
 	if(m_remaining == 0)
 		return true;
@@ -203,7 +203,7 @@ QString MappedFile::ReadUntil(const char * until)
 {
 	QString ret;
 
-	if(until == NULL)
+	if(until == nullptr)
 		return ret;
 	size_t len_until = strlen(until);
 

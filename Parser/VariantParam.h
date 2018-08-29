@@ -7,15 +7,15 @@ class VariantParam
 {
 public:
 public:
-	inline VariantParam(void) { m_name = NULL; m_token = Tok_First; }
+	inline VariantParam(void) { m_name = nullptr; m_token = Tok_First; }
 	inline VariantParam(const char * name)
 		{ m_name = name; m_token = Tok_First; }
 	inline VariantParam(int token)
-		{ m_name = NULL; m_token = token; }
+		{ m_name = nullptr; m_token = token; }
 
 	inline bool isNull(void) const { return ( (isToken() == false) && (isName() == false) ); }
 
-	inline bool isName(void) const { return m_name != NULL; }
+	inline bool isName(void) const { return m_name != nullptr; }
 	inline const char * toName(void) const { return m_name; }
 
 	inline bool isToken(void) const { return m_token != Tok_First; }

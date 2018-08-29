@@ -11,7 +11,7 @@
 class IfsImageFile
 {
 public:
-	IfsImageFile(const char * Filename = NULL);
+	IfsImageFile(const char * Filename = nullptr);
 	~IfsImageFile(void);
 	inline bool IsValid(void) const { return m_valid; }
 

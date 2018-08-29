@@ -2,39 +2,44 @@
 #include "ui_DlgAbout.h"
 #include "Conf.h"
 
-DlgAbout::DlgAbout(QWidget *parent) :
-	QDialog(parent),
-	ui(new Ui::DlgAbout)
+DlgAbout::DlgAbout(QWidget *parent /*= nullptr */)
+	: QDialog(parent)
+	, ui(new Ui::DlgAbout)
 {
 	ui->setupUi(this);
+	setWindowTitle ("About...");
+
+	// remove question mark in the title
+	setWindowFlags(windowFlags() & (~Qt::WindowContextHelpButtonHint));
 
 	QString str;
 
-	str = Conf::Application() +
-#ifdef MCR_DEBUG
-			" - debug version "
-#else
-			" - release version "
-#endif
-			+ Conf::Version();
+	// set application name and version number
+	str = Conf::Application() + " - ";
+	str += " version " + Conf::Version();
 	setLabel(ui->ProgramName, str);
 
-	str = Conf::Copyright() + " - <a href='" +
-			Conf::AuthorMail() +
-			"'>" +
-			Conf::AuthorName() +
-			"</a>";
+	// set build date
+	str = "";
+#ifdef MCR_DEBUG
+			str += "Debug";
+#else
+	str += "Release";
+#endif
+	str += " build - ";
+	str += Conf::FileDate();
+	setLabel(ui->BuildDate, str);
+
+	// set copyright with author mail
+	str = Conf::Copyright() + " - <a href='" + Conf::AuthorMail() + "'>" + Conf::AuthorName() + "</a>";
 	setLabel(ui->Copyright, str);
 
-	str = "<a href='" +
-			Conf::SiteUrl() +
-			"'>" +
-			Conf::SiteName() +
-			"</a>";
+	// set site url
+	str = "<a href='" + Conf::SiteUrl() + "'>" + Conf::SiteName() + "</a>";
 	setLabel(ui->Url, str);
 }
 
-DlgAbout::~DlgAbout()
+DlgAbout::~DlgAbout(void)
 {
 	delete ui;
 }

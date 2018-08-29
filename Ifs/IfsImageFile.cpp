@@ -6,17 +6,17 @@
 // TODO ImageFile: Add more check when reading
 // TODO ImageFile: Add global validity function
 
-IfsImageFile::IfsImageFile(const char * Filename /*= NULL*/)
+IfsImageFile::IfsImageFile(const char * Filename /*= nullptrptr*/)
 {
 	// store file path
-	m_map = NULL;
-	m_dos_header = NULL;
-	m_nt_headers = NULL;
+	m_map = nullptr;
+	m_dos_header = nullptr;
+	m_nt_headers = nullptr;
 	m_image_section_header.clear();
-	m_image_resource_directory = NULL;
+	m_image_resource_directory = nullptr;
 	m_valid = false;
 
-	if(Filename == NULL)
+	if(Filename == nullptr)
 		m_filename = QCoreApplication::applicationFilePath();
 	else
 		m_filename = Filename;
@@ -32,7 +32,7 @@ IfsImageFile::IfsImageFile(const char * Filename /*= NULL*/)
 
 	// get pointer on memory
 	m_map = m_file.map(0, m_file.size());
-	if(m_map == NULL)
+	if(m_map == nullptr)
 	{
 		// unable to map the file
 		ERREUR("ImageFile: Unable to map file %s", m_filename.toUtf8().constData());
@@ -70,7 +70,7 @@ IfsImageFile::IfsImageFile(const char * Filename /*= NULL*/)
 		}
 	}
 
-	if(m_image_resource_directory == NULL)
+	if(m_image_resource_directory == nullptr)
 		return;
 
 	// all seems correct
@@ -79,20 +79,20 @@ IfsImageFile::IfsImageFile(const char * Filename /*= NULL*/)
 
 IfsImageFile::~IfsImageFile(void)
 {
-	if(m_image_resource_directory != NULL)
+	if(m_image_resource_directory != nullptr)
 		delete m_image_resource_directory;
 
 	for(int boucle = 0; boucle != m_image_section_header.size(); boucle++)
 		delete m_image_section_header[boucle];
 	m_image_section_header.clear();
 
-	if(m_dos_header != NULL)
+	if(m_dos_header != nullptr)
 		delete m_dos_header;
-	if(m_nt_headers != NULL)
+	if(m_nt_headers != nullptr)
 		delete m_nt_headers;
 
 	// unmap file
-	if(m_map != NULL)
+	if(m_map != nullptr)
 		m_file.unmap(m_map);
 
 	// close the file
@@ -106,36 +106,36 @@ IfsImageFile::~IfsImageFile(void)
 const void * IfsImageFile::GetResourceVersionPtr(void) const
 {
 	// create resource Version
-	if(m_image_resource_directory == NULL)
+	if(m_image_resource_directory == nullptr)
 	{
 		// no resource to parse
 		ERREUR("No resource to parse");
-		return NULL;
+		return nullptr;
 	}
 
 	// parse first level
 	// 16 is the identifier of Version resource
 	const IfsImageResourceDirectory * level_1 = m_image_resource_directory->GetDirectory("16");
-	if(level_1 == NULL)
+	if(level_1 == nullptr)
 	{
 		ERREUR("No version resource");
-		return NULL;
+		return nullptr;
 	}
 
 	// parse second level
 	// get first entry (it is theorically possible to have several Version)
 	const IfsImageResourceDirectory * level_2 = level_1->GetDirectory("");
-	if(level_2 == NULL)
+	if(level_2 == nullptr)
 	{
 		ERREUR("No version resource");
-		return NULL;
+		return nullptr;
 	}
 
 	const IfsImageResourceDataEntry * data_entry = level_2->GetEntryOffsetData("");
-	if(data_entry == NULL)
+	if(data_entry == nullptr)
 	{
 		ERREUR("No version resource");
-		return NULL;
+		return nullptr;
 	}
 
 	// offset is relative to m_image_resource_directory
@@ -146,8 +146,8 @@ const void * IfsImageFile::GetResourceVersionPtr(void) const
 const void * IfsImageFile::GetPointerFromRVA(quint32 p_rva) const
 {
 	const IfsImageSectionHeader * Section = GetEnclosingSectionHeader(p_rva);
-	if(Section == NULL)
-		return NULL;
+	if(Section == nullptr)
+		return nullptr;
 
 	quint32 delta = Section->Get()->VirtualAddress - Section->Get()->PointerToRawData;
 	const void * ptr = m_map;
@@ -173,6 +173,6 @@ const IfsImageSectionHeader * IfsImageFile::GetEnclosingSectionHeader(quint32 p_
 			 (p_rva < p->Get()->VirtualAddress + size))
 			return p;
 	}
-	return NULL;
+	return nullptr;
 }
 

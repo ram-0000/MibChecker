@@ -14,12 +14,12 @@ void ParserContextExec::Reset(void)
 {
 	m_callstack.clear();
 	m_callback_delayed.clear();
-	m_pc = NULL;
+	m_pc = nullptr;
 }
 
 bool ParserContextExec::isSet(void) const
 {
-	if(m_pc != NULL)
+	if(m_pc != nullptr)
 		return true;
 	if(m_callstack.size() != 0)
 		return true;
@@ -31,7 +31,7 @@ void ParserContextExec::CallStackPush(ParserItem * item)
 	ParserException::CheckNull(item);
 
 	// do no use PcGet() in this place because sometimes (when initializing)
-	// PC is NULL and PcGet() will throw exception
+	// PC is nullptr and PcGet() will throw exception
 	m_callstack.push_back(m_pc);
 	PcSet(item);
 }
@@ -43,8 +43,8 @@ void ParserContextExec::CallStackPop(void)
 	m_pc = m_callstack.back();
 	m_callstack.pop_back();
 
-	// when PC becomes NULL, we probably reach end of parsing
-	if(m_pc != NULL)
+	// when PC becomes nullptr, we probably reach end of parsing
+	if(m_pc != nullptr)
 		PcNext();
 }
 

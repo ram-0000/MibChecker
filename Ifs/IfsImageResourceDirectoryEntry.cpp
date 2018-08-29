@@ -5,7 +5,7 @@
 IfsImageResourceDirectoryEntry::IfsImageResourceDirectoryEntry(const void * p_begin_section, quint32 offset, quint16 p_level)
 	: Ifs(IfsPointer::s_Add(p_begin_section, offset), sizeof(IMAGE_RESOURCE_DIRECTORY_ENTRY))
 {
-	m_image_resource_data_entry = NULL;
+	m_image_resource_data_entry = nullptr;
 
 	// save the level
 	m_level = p_level;
@@ -26,7 +26,7 @@ IfsImageResourceDirectoryEntry::IfsImageResourceDirectoryEntry(const void * p_be
 	}
 
 	// check if entry or subdirectory
-	m_sub_directory = NULL;
+	m_sub_directory = nullptr;
 	if( (Get()->OffsetToData & mask) == mask)
 	{
 		quint32 new_offset = Get()->OffsetToData & anti_mask;
@@ -41,10 +41,10 @@ IfsImageResourceDirectoryEntry::IfsImageResourceDirectoryEntry(const void * p_be
 
 IfsImageResourceDirectoryEntry::~IfsImageResourceDirectoryEntry(void)
 {
-	if(m_sub_directory != NULL)
+	if(m_sub_directory != nullptr)
 		delete m_sub_directory;
 
-	if(m_image_resource_data_entry != NULL)
+	if(m_image_resource_data_entry != nullptr)
 		delete m_image_resource_data_entry;
 }
 

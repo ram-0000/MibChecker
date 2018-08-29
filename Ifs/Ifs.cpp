@@ -16,7 +16,7 @@ Ifs::~Ifs(void)
 
 void Ifs::Reset(void)
 {
-	m_begin = NULL;
+	m_begin = nullptr;
 	m_size = 0;
 }
 

@@ -22,7 +22,7 @@ IfsImageResourceDirectory::~IfsImageResourceDirectory(void)
 {
 	for(int boucle = 0; boucle != m_directory_entry.size(); boucle++)
 	{
-		if(m_directory_entry[boucle] != NULL)
+		if(m_directory_entry[boucle] != nullptr)
 			delete m_directory_entry[boucle];
 	}
 	m_directory_entry.clear();
@@ -49,7 +49,7 @@ const IfsImageResourceDirectory * IfsImageResourceDirectory::GetDirectory(const 
 		if(p->Name() == p_name)
 			return p->SubDirectory();
 	}
-	return NULL;
+	return nullptr;
 }
 
 const IfsImageResourceDataEntry *IfsImageResourceDirectory::GetEntryOffsetData(const QString & p_name) const
@@ -68,5 +68,5 @@ const IfsImageResourceDataEntry *IfsImageResourceDirectory::GetEntryOffsetData(c
 		if(p->Name() == p_name)
 			return p->DataEntry();
 	}
-	return NULL;
+	return nullptr;
 }

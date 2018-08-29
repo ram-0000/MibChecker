@@ -4,8 +4,9 @@
 #include <QDialog>
 #include <QLabel>
 
-namespace Ui {
-class DlgAbout;
+namespace Ui
+{
+	class DlgAbout;
 }
 
 class DlgAbout : public QDialog
@@ -13,8 +14,8 @@ class DlgAbout : public QDialog
 	Q_OBJECT
 
 public:
-	explicit DlgAbout(QWidget *parent = 0);
-	~DlgAbout();
+	explicit DlgAbout(QWidget *parent = nullptr);
+	~DlgAbout(void);
 
 private:
 	Ui::DlgAbout *ui;

@@ -31,7 +31,7 @@ const void * IfsPointer::operator()(void)
 
 const void * IfsPointer::Reset(void)
 {
-	return Set(NULL);
+	return Set(nullptr);
 }
 
 const void * IfsPointer::Set(const void * p_ptr)

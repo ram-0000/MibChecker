@@ -6,7 +6,7 @@ IfsResVersion::IfsResVersion(const void *p_ptr)
 {
 	// check pointer
 	m_valid = false;
-	if(p_ptr == NULL)
+	if(p_ptr == nullptr)
 		return;
 
 	// create the memory pointer to patrse the structure
@@ -478,8 +478,11 @@ QString IfsResVersion::String(const QString & Name, const QString & CodePage /*=
 	if(IsValid() == false)
 		return "";
 
+	if(Name == "FileDate")
+		return GetFileDateStr();
+
 	// find the String Table
-	const QVector<ResVersion_String> * table = NULL;
+	const QVector<ResVersion_String> * table = nullptr;
 	for(int boucle = 0; boucle != m_version.stringFileInfo.stringTable.size(); boucle++)
 	{
 		if(CodePage.length() == 0)
@@ -496,7 +499,7 @@ QString IfsResVersion::String(const QString & Name, const QString & CodePage /*=
 	}
 
 	// check if something found
-	if(table == NULL)
+	if(table == nullptr)
 		return "";
 
 	for(int boucle = 0; boucle != table->size(); boucle++)
@@ -507,4 +510,30 @@ QString IfsResVersion::String(const QString & Name, const QString & CodePage /*=
 
 	// nothing found
 	return "";
+}
+
+QDateTime IfsResVersion::GetFileDate(void) const
+{
+	// build FILETIME structure
+	FILETIME ft;
+	ft.dwHighDateTime = GetFileDateMS();
+	ft.dwLowDateTime = GetFileDateLS();
+
+	// build SYSTEMTIME structure
+	SYSTEMTIME st;
+	if(FileTimeToSystemTime(&ft, &st) == FALSE)
+	{
+		ERREUR("Erreur in FileTimeToSystemTime()");
+		return QDateTime();
+	}
+
+	QDate date(st.wYear, st.wMonth, st.wDay);
+	QTime time(st.wHour, st.wMinute, st.wSecond);
+	QDateTime dt(date, time);
+	return dt;
+}
+
+QString IfsResVersion::GetFileDateStr(void) const
+{
+	return GetFileDate().toString("yyyy-MM-dd HH:mm:ss UTC");
 }

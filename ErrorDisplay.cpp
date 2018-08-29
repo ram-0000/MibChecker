@@ -10,7 +10,7 @@ ErrorDisplay::ErrorDisplay(QTextEdit * error)
 
 ErrorDisplay::~ErrorDisplay(void)
 {
-	if(m_cursor != NULL)
+	if(m_cursor != nullptr)
 		delete m_cursor;
 }
 

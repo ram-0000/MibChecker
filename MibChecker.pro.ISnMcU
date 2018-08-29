@@ -124,8 +124,8 @@ HEADERS += \
 
 DISTFILES += \
 	 Grammar/asn1.grammar \
-    MibChecker.ver \
-    Grammar/asn.g
+	 Grammar/asn.g \
+	 res/Chooser.png
 
 RESOURCES += \
 	 Res.qrc

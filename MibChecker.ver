@@ -1,0 +1,12 @@
+ProductVersion=0.0.7.15
+FileVersion=0.0.7.15
+Comments=A checker for MIB files
+CompanyName=Circitor
+FileDescription=MibChecker
+InternalName=MibChecker
+LegalCopyright=Copyright © 2007-2018 - Circitor
+LegalTrademarks=
+OriginalFilename=MibChecker
+PrivateBuild=Public build
+ProductName=MibChecker
+SpecialBuild=Release build

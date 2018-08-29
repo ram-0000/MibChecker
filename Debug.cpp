@@ -7,12 +7,12 @@ void Debug::WindowsError(const char * File, int Line, const char * FunctionName,
 	// get error message
 	LPVOID lpMsgBuf;
 	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-					  NULL,
+					  nullptr,
 					  ErrorCode,
 					  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 					  (LPTSTR)&lpMsgBuf,
 					  0,
-					  NULL );
+					  nullptr );
 	QString str((QChar *)lpMsgBuf);
 	LocalFree(lpMsgBuf);
 
@@ -68,12 +68,12 @@ const char * Debug::ShortFile(const char * File)
 {
 	// try to find last
 	const char *p = strrchr(File, '\\');
-	if(p != NULL)
+	if(p != nullptr)
 		return p + 1;
 
 	// try to find last
 	p = strrchr(File, '/');
-	if(p != NULL)
+	if(p != nullptr)
 		return p + 1;
 
 	// nothing found, return entry

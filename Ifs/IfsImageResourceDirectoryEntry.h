@@ -18,7 +18,7 @@ public:
 	const IMAGE_RESOURCE_DIRECTORY_ENTRY * Get(void) const;
 
 	inline const QString & Name(void) const { return m_name; }
-	inline bool IsDirectory(void) const { return m_sub_directory != NULL; }
+	inline bool IsDirectory(void) const { return m_sub_directory != nullptr; }
 	inline const IfsImageResourceDirectory * SubDirectory(void) const { return m_sub_directory; }
 	inline const IfsImageResourceDataEntry * DataEntry(void) const { return m_image_resource_data_entry; }
 

@@ -4,101 +4,51 @@
 #include "Ifs/IfsImageFile.h"
 #include "Ifs/IfsResVersion.h"
 
-Conf::ConfElt_t * Conf::table(void)
-{
-static Conf::ConfElt_t t[] =
-{
-	{ ConfIdCompany, ConfTypeString, ConfSrcVersion, "CompanyName", "", 0, "", QByteArray(), false },
-	{ ConfIdApplication, ConfTypeString, ConfSrcVersion, "ProductName", "", 0, "", QByteArray(), false },
-	{ ConfIdVersion, ConfTypeString, ConfSrcVersion, "ProductVersion", "1", 0, "", QByteArray(), false },
-	{ ConfIdCopyright, ConfTypeString, ConfSrcVersion, "LegalCopyright", "", 0, "", QByteArray(), false },
-	{ ConfIdAuthorName, ConfTypeString, ConfSrcHard, "", "Raymond Mercier", 0, "", QByteArray(), false },
-	{ ConfIdAuthorMail, ConfTypeString, ConfSrcHard, "", "mailto:Raymond.Mercier@circitor.fr", 0, "", QByteArray(), false },
-	{ ConfIdSiteName, ConfTypeString, ConfSrcHard, "", "www.circitor.fr", 0, "", QByteArray(), false },
-	{ ConfIdSiteUrl, ConfTypeString, ConfSrcHard, "", "http://www.circitor.fr", 0, "", QByteArray(), false },
-
-	{ ConfIdInputFolder, ConfTypeString, ConfSrcRegUser, "InputFolder", "C:\\Users\\Raymond\\Documents\\Qt\\Mib\\ToBeChecked", 0, "", QByteArray(), false },
-	{ ConfIdBadFolder, ConfTypeString, ConfSrcRegUser, "BadFolder", "C:\\Users\\Raymond\\Documents\\Qt\\Mib\\Bad", 0, "", QByteArray(), false },
-	{ ConfIdOutputDefFolder, ConfTypeString, ConfSrcRegUser, "DefFolder", "C:\\Users\\Raymond\\Documents\\Qt\\Mib\\www\\Def", 0, "", QByteArray(), false },
-	{ ConfIdOutputHtmlFolder, ConfTypeString, ConfSrcRegUser, "HtmlFolder", "C:\\Users\\Raymond\\Documents\\Qt\\Mib\\www\\Html", 0, "", QByteArray(), false },
-	{ ConfIdOutputMibFolder, ConfTypeString, ConfSrcRegUser, "MibFolder", "C:\\Users\\Raymond\\Documents\\Qt\\Mib\\www\\Mib", 0, "", QByteArray(), false },
-	{ ConfIdWndMainGeometry, ConfTypeArray, ConfSrcRegUser, "WndMainGeometry", "", 0, "", QByteArray(), false },
-	{ ConfIdWndMainState, ConfTypeArray, ConfSrcRegUser, "WndMainState", "", 0, "", QByteArray(), false },
-	{ ConfIdEditorPath, ConfTypeString, ConfSrcRegUser, "EditorPath", "notepad.exe", 0, "", QByteArray(), false },
-	{ ConfIdMibExtension, ConfTypeString, ConfSrcRegUser, "MibExtension", ".mib", 0, "", QByteArray(), false },
-	{ ConfIdDefExtension, ConfTypeString, ConfSrcRegUser, "DefExtension", ".def", 0, "", QByteArray(), false },
-	{ ConfIdHtmlExtension, ConfTypeString, ConfSrcRegUser, "HtmlExtension", ".php", 0, "", QByteArray(), false },
-	{ ConfIdOverwriteAlgorithm, ConfTypeInteger, ConfSrcRegUser, "OverwriteAlgorithm", "0", 0, "", QByteArray(), false },
-
-	// must be the last element
-	{ static_cast<ConfId_t>(-1), static_cast<ConfType_t>(-1), static_cast<ConfSrc_t>(-1), "", "", 0, "", QByteArray(), false },
-};
-	return t;
-}
-
-QString Conf::Company(void) { return String(ConfIdCompany); }
-QString Conf::Application(void) { return String(ConfIdApplication); }
-QString Conf::Copyright(void) { return String(ConfIdCopyright); }
-QString Conf::Version(void) { return String(ConfIdVersion); }
-QString Conf::AuthorName(void) { return String(ConfIdAuthorName); }
-QString Conf::AuthorMail(void) { return String(ConfIdAuthorMail); }
-QString Conf::SiteName(void) { return String(ConfIdSiteName); }
-QString Conf::SiteUrl(void) { return String(ConfIdSiteUrl); }
-
-QString Conf::InputFolder(void) { return String(ConfIdInputFolder); }
-void Conf::InputFolder(const QString & value) { String(ConfIdInputFolder, value); }
-
-QString Conf::BadFolder(void) { return String(ConfIdBadFolder); }
-void Conf::BadFolder(const QString & value) { String(ConfIdBadFolder, value); }
-
-QString Conf::OutputMibFolder(void) { return String(ConfIdOutputMibFolder); }
-void Conf::OutputMibFolder(const QString & value) { String(ConfIdOutputMibFolder, value); }
-
-QString Conf::OutputDefFolder(void) { return String(ConfIdOutputDefFolder); }
-void Conf::OutputDefFolder(const QString & value) { String(ConfIdOutputDefFolder, value); }
-
-QString Conf::OutputHtmlFolder(void) { return String(ConfIdOutputHtmlFolder); }
-void Conf::OutputHtmlFolder(const QString & value) { String(ConfIdOutputHtmlFolder, value); }
-
-QByteArray Conf::WndMainGeometry(void) { return Array(ConfIdWndMainGeometry); }
-void Conf::WndMainGeometry(const QByteArray value) { Array(ConfIdWndMainGeometry, value); }
-
-QByteArray Conf::WndMainState(void) { return Array(ConfIdWndMainState); }
-void Conf::WndMainState(const QByteArray value) { Array(ConfIdWndMainState, value); }
-
-QString Conf::EditorPath(void) { return String(ConfIdEditorPath); }
-void Conf::EditorPath(const QString & value) { String(ConfIdEditorPath, value); }
-
-QString Conf::MibExtension(void) { return String(ConfIdMibExtension); }
-void Conf::MibExtension(const QString & value) { String(ConfIdMibExtension, value); }
-
-QString Conf::DefExtension(void) { return String(ConfIdDefExtension); }
-void Conf::DefExtension(const QString & value) { String(ConfIdDefExtension, value); }
-
-QString Conf::HtmlExtension(void) { return String(ConfIdHtmlExtension); }
-void Conf::HtmlExtension(const QString & value) { String(ConfIdHtmlExtension, value); }
-
-int Conf::OverwriteAlgorithm(void)  { return Integer(ConfIdOverwriteAlgorithm); }
-void Conf::OverwriteAlgorithm(int value) { Integer(ConfIdOverwriteAlgorithm, value); }
-
 Conf::ConfElt_t * Conf::Find(ConfId_t id)
 {
-	for(ConfElt_t * p = table(); p->Id != -1; p++)
+	static Conf::ConfElt_t t[] =
 	{
+		{ ConfIdCompany,					ConfTypeString,  ConfSrcVersion,	"CompanyName",				"", 0, "", QByteArray(), false },
+		{ ConfIdApplication,				ConfTypeString,  ConfSrcVersion,	"ProductName",				"", 0, "", QByteArray(), false },
+		{ ConfIdCopyright,				ConfTypeString,  ConfSrcVersion,	"LegalCopyright",			"", 0, "", QByteArray(), false },
+		{ ConfIdVersion,					ConfTypeString,  ConfSrcVersion,	"ProductVersion",			"1", 0, "", QByteArray(), false },
+		{ ConfIdFileDate,					ConfTypeString,  ConfSrcVersion,	"FileDate", "1",			0, "", QByteArray(), false },
+		{ ConfIdAuthorName,				ConfTypeString,  ConfSrcHard,		"",							"Raymond Mercier",							0, "", QByteArray(), false },
+		{ ConfIdAuthorMail,				ConfTypeString,  ConfSrcHard,		"",							"mailto:Raymond.Mercier@circitor.fr",	0, "", QByteArray(), false },
+		{ ConfIdSiteName,					ConfTypeString,  ConfSrcHard,		"",							"www.circitor.fr",							0, "", QByteArray(), false },
+		{ ConfIdSiteUrl,					ConfTypeString,  ConfSrcHard,		"",							"http://www.circitor.fr",					0, "", QByteArray(), false },
+
+		{ ConfIdInputFolder,				ConfTypeString,  ConfSrcRegUser,	"InputFolder",				"C:\\Users\\Raymond\\Documents\\Qt\\Mib\\ToBeChecked", 0, "", QByteArray(), false },
+		{ ConfIdBadFolder,				ConfTypeString,  ConfSrcRegUser,	"BadFolder",				"C:\\Users\\Raymond\\Documents\\Qt\\Mib\\Bad", 0, "", QByteArray(), false },
+		{ ConfIdOutputDefFolder,		ConfTypeString,  ConfSrcRegUser,	"DefFolder",				"C:\\Users\\Raymond\\Documents\\Qt\\Mib\\www\\Def", 0, "", QByteArray(), false },
+		{ ConfIdOutputHtmlFolder,		ConfTypeString,  ConfSrcRegUser,	"HtmlFolder",				"C:\\Users\\Raymond\\Documents\\Qt\\Mib\\www\\Html", 0, "", QByteArray(), false },
+		{ ConfIdOutputMibFolder,		ConfTypeString,  ConfSrcRegUser,	"MibFolder",				"C:\\Users\\Raymond\\Documents\\Qt\\Mib\\www\\Mib", 0, "", QByteArray(), false },
+		{ ConfIdWndMainGeometry,		ConfTypeArray,   ConfSrcRegUser,	"WndMainGeometry",		"", 0, "", QByteArray(), false },
+		{ ConfIdWndMainState,			ConfTypeArray,   ConfSrcRegUser,	"WndMainState",			"", 0, "", QByteArray(), false },
+		{ ConfIdEditorPath,				ConfTypeString,  ConfSrcRegUser,	"EditorPath",				"notepad.exe", 0, "", QByteArray(), false },
+		{ ConfIdMibExtension,			ConfTypeString,  ConfSrcRegUser,	"MibExtension",			".mib", 0, "", QByteArray(), false },
+		{ ConfIdDefExtension,			ConfTypeString,  ConfSrcRegUser,	"DefExtension",			".def", 0, "", QByteArray(), false },
+		{ ConfIdHtmlExtension,			ConfTypeString,  ConfSrcRegUser,	"HtmlExtension",			".php", 0, "", QByteArray(), false },
+		{ ConfIdOverwriteAlgorithm,	ConfTypeInteger, ConfSrcRegUser,	"OverwriteAlgorithm",	"0", 0, "", QByteArray(), false },
+	};
+
+	for(int boucle = 0; boucle != sizeof(t) / sizeof(t[0]); boucle++)
+	{
+		ConfElt_t * p = &t[boucle];
 		if(p->Id == id)
 			return p;
 	}
 
 	// element not found
 	FATAL("Conf: unable to find element %d", id);
-	return NULL;
+	return nullptr;
 }
 
 int Conf::Integer(ConfId_t id)
 {
 	// find element
 	ConfElt_t * p = Find(id);
-	if(p == NULL)
+	if(p == nullptr)
 		return 0;
 
 	// check type
@@ -180,7 +130,7 @@ void Conf::Integer(ConfId_t id, int value)
 {
 	// find element
 	ConfElt_t * p = Find(id);
-	if(p == NULL)
+	if(p == nullptr)
 		return;
 
 	// check type
@@ -233,7 +183,7 @@ QString Conf::String(ConfId_t id)
 {
 	// find element
 	ConfElt_t * p = Find(id);
-	if(p == NULL)
+	if(p == nullptr)
 		return "";
 
 	// check type
@@ -315,7 +265,7 @@ void Conf::String(ConfId_t id, const QString & value)
 {
 	// find element
 	ConfElt_t * p = Find(id);
-	if(p == NULL)
+	if(p == nullptr)
 		return;
 
 	// check type
@@ -368,7 +318,7 @@ QByteArray Conf::Array(ConfId_t id)
 {
 	// find element
 	ConfElt_t * p = Find(id);
-	if(p == NULL)
+	if(p == nullptr)
 		return QByteArray();
 
 	// check type
@@ -432,7 +382,7 @@ void Conf::Array(ConfId_t id, const QByteArray & value)
 {
 	// find element
 	ConfElt_t * p = Find(id);
-	if(p == NULL)
+	if(p == nullptr)
 		return;
 
 	// check type

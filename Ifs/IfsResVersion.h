@@ -4,6 +4,7 @@
 #include <QtGlobal>
 #include <QString>
 #include <QVector>
+#include <QDateTime>
 #include "IfsPointer.h"
 #include "IfsRemainingCounter.h"
 
@@ -112,6 +113,11 @@ public:
 	quint8 GetProductVersion2(void) const;
 	quint8 GetProductVersion3(void) const;
 	quint8 GetProductVersion4(void) const;
+
+	QString GetFileDateStr(void) const;
+	QDateTime GetFileDate(void) const;
+	inline quint32 GetFileDateMS(void) const { return m_version.Value.dwFileDateMS; }
+	inline quint32 GetFileDateLS(void) const { return m_version.Value.dwFileDateMS; }
 
 	inline QString Comments(const QString & CodePage = "") const
 	{ return String("Comments", CodePage); }

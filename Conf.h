@@ -5,50 +5,51 @@
 class Conf
 {
 public:
-	static QString Company(void);
-	static QString Application(void);
-	static QString Copyright(void);
-	static QString Version(void);
-	static QString AuthorName(void);
-	static QString AuthorMail(void);
-	static QString SiteName(void);
-	static QString SiteUrl(void);
+	inline static QString Company(void)			{ return String(ConfIdCompany); }
+	inline static QString Application(void)	{ return String(ConfIdApplication); }
+	inline static QString Copyright(void)		{ return String(ConfIdCopyright); }
+	inline static QString Version(void)			{ return String(ConfIdVersion); }
+	inline static QString FileDate(void)		{ return String(ConfIdFileDate); }
+	inline static QString AuthorName(void)		{ return String(ConfIdAuthorName); }
+	inline static QString AuthorMail(void)		{ return String(ConfIdAuthorMail); }
+	inline static QString SiteName(void)		{ return String(ConfIdSiteName); }
+	inline static QString SiteUrl(void)			{ return String(ConfIdSiteUrl); }
 
-	static QString InputFolder(void);
-	static void InputFolder(const QString & value);
+	inline static QString InputFolder(void)				{ return String(ConfIdInputFolder); }
+	inline static void InputFolder(const QString & value) { String(ConfIdInputFolder, value); }
 
-	static QString BadFolder(void);
-	static void BadFolder(const QString & value);
+	inline static QString BadFolder(void)				{ return String(ConfIdBadFolder); }
+	inline static void BadFolder(const QString & value) { String(ConfIdBadFolder, value); }
 
-	static QString OutputMibFolder(void);
-	static void OutputMibFolder(const QString & value);
+	inline static QString OutputMibFolder(void)		{ return String(ConfIdOutputMibFolder); }
+	inline static void OutputMibFolder(const QString & value) { String(ConfIdOutputMibFolder, value); }
 
-	static QString OutputDefFolder(void);
-	static void OutputDefFolder(const QString & value);
+	inline static QString OutputDefFolder(void)		{ return String(ConfIdOutputDefFolder); }
+	inline static void OutputDefFolder(const QString & value) { String(ConfIdOutputDefFolder, value); }
 
-	static QString OutputHtmlFolder(void);
-	static void OutputHtmlFolder(const QString & value);
+	inline static QString OutputHtmlFolder(void)		{ return String(ConfIdOutputHtmlFolder); }
+	inline static void OutputHtmlFolder(const QString & value) { String(ConfIdOutputHtmlFolder, value); }
 
-	static QByteArray WndMainGeometry(void);
-	static void WndMainGeometry(const QByteArray value);
+	inline static QByteArray WndMainGeometry(void)	{ return Array(ConfIdWndMainGeometry); }
+	inline static void WndMainGeometry(const QByteArray value) { Array(ConfIdWndMainGeometry, value); }
 
-	static QByteArray WndMainState(void);
-	static void WndMainState(const QByteArray value);
+	inline static QByteArray WndMainState(void)		{ return Array(ConfIdWndMainState); }
+	inline static void WndMainState(const QByteArray value) { Array(ConfIdWndMainState, value); }
 
-	static QString EditorPath(void);
-	static void EditorPath(const QString & value);
+	inline static QString EditorPath(void)				{ return String(ConfIdEditorPath); }
+	inline static void EditorPath(const QString & value) { String(ConfIdEditorPath, value); }
 
-	static QString MibExtension(void);
-	static void MibExtension(const QString & value);
+	inline static QString MibExtension(void)			{ return String(ConfIdMibExtension); }
+	inline static void MibExtension(const QString & value) { String(ConfIdMibExtension, value); }
 
-	static QString DefExtension(void);
-	static void DefExtension(const QString & value);
+	inline static QString DefExtension(void)			{ return String(ConfIdDefExtension); }
+	inline static void DefExtension(const QString & value) { String(ConfIdDefExtension, value); }
 
-	static QString HtmlExtension(void);
-	static void HtmlExtension(const QString & value);
+	inline static QString HtmlExtension(void)			{ return String(ConfIdHtmlExtension); }
+	inline static void HtmlExtension(const QString & value) { String(ConfIdHtmlExtension, value); }
 
-	static int OverwriteAlgorithm(void);
-	static void OverwriteAlgorithm(int value);
+	inline static int OverwriteAlgorithm(void)			{ return Integer(ConfIdOverwriteAlgorithm); }
+	inline static void OverwriteAlgorithm(int value) { Integer(ConfIdOverwriteAlgorithm, value); }
 
 protected:
 
@@ -58,6 +59,7 @@ private:
 						ConfIdApplication,
 						ConfIdCopyright,
 						ConfIdVersion,
+						ConfIdFileDate,
 						ConfIdAuthorName,
 						ConfIdAuthorMail,
 						ConfIdSiteName,
@@ -84,6 +86,7 @@ private:
 	// source where values come from
 	typedef enum { ConfSrcHard, ConfSrcVersion, ConfSrcRegUser, ConfSrcRegHost } ConfSrc_t;
 
+	// structure of an entry in table describing all existing entries
 	typedef struct
 	{	ConfId_t Id;
 		ConfType_t Type;
@@ -109,19 +112,14 @@ private:
 	static void Array(ConfId_t id, const QByteArray & value);
 
 	// to manage color values
-	static inline QColor Color(ConfId_t id) { return QColor(Integer(id)); }
-	static inline void Color(ConfId_t id, const QColor & value) { Integer(id, value.rgb()); }
+	inline static QColor Color(ConfId_t id) { return QColor(static_cast<quint32>(Integer(id))); }
+	inline static void Color(ConfId_t id, const QColor & value) { Integer(id, static_cast<qint32>(value.rgb())); }
 
 	// to find an configuration element
 	static ConfElt_t * Find(ConfId_t id);
 
-	// table of configuration values
-	static ConfElt_t m_table[];
-
 	// private constuctor, it is a static only class
 	inline Conf() { }
-
-	static ConfElt_t * table(void);
 };
 
 #endif // CONF_H

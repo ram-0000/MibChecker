@@ -5,7 +5,7 @@ ParserItem::ParserItem(const char * rule, ParserItemType_t type)
 {
 	// record item type
 	m_id = -1;
-	m_next = NULL;
+	m_next = nullptr;
 	m_type = type;
 
 	// record rule name
@@ -13,11 +13,11 @@ ParserItem::ParserItem(const char * rule, ParserItemType_t type)
 	m_rule = rule;
 
 	m_value_number = -1;
-	m_value_string = NULL;
+	m_value_string = nullptr;
 
 	m_jump_table.clear();
 
-	m_callback_fct = NULL;
+	m_callback_fct = nullptr;
 	m_callback_order = -1;
 
 }
@@ -40,7 +40,7 @@ void ParserItem::Finalize(int id, ParserItem * next) throw (ParserException)
 		throw ParserExceptionShouldNotArrive(__FILE__, __LINE__);
 	m_id = id;
 
-	if(m_next != NULL)
+	if(m_next != nullptr)
 		throw ParserExceptionShouldNotArrive(__FILE__, __LINE__);
 	m_next = next;
 }

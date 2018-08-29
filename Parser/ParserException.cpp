@@ -3,7 +3,7 @@
 
 void ParserException::CheckNull(const void * Pointer)
 {
-	if(Pointer == NULL)
+	if(Pointer == nullptr)
 		throw ParserExceptionNullPointer();
 }
 

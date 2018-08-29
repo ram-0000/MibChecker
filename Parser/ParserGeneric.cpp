@@ -26,7 +26,7 @@ void ParserGeneric::Finalize(void)
 		ParserItem * current = *it_current;
 		ParserItemList::iterator it_next = it_current + 1;
 
-		ParserItem * next = NULL;
+		ParserItem * next = nullptr;
 		if(it_next != m_parser.end())
 			next = *it_next;
 
@@ -526,8 +526,8 @@ void ParserGeneric::_branch(const ParserPow & pow,
 									 ParserItem * & end,
 									 VariantParam & param)
 {
-	start = NULL;
-	end = NULL;
+	start = nullptr;
+	end = nullptr;
 
 	if(param.isNull() == false)
 	{
@@ -630,45 +630,45 @@ void ParserGeneric::Branch(const ParserPow & pow,
 	// add jump
 	start->Jump(start_branch_0);
 	start->Jump(start_branch_1);
-	if(start_branch_2 != NULL) start->Jump(start_branch_2);
-	if(start_branch_3 != NULL) start->Jump(start_branch_3);
-	if(start_branch_4 != NULL) start->Jump(start_branch_4);
-	if(start_branch_5 != NULL) start->Jump(start_branch_5);
-	if(start_branch_6 != NULL) start->Jump(start_branch_6);
-	if(start_branch_7 != NULL) start->Jump(start_branch_7);
-	if(start_branch_8 != NULL) start->Jump(start_branch_8);
-	if(start_branch_9 != NULL) start->Jump(start_branch_9);
-	if(start_branch_10 != NULL) start->Jump(start_branch_10);
-	if(start_branch_11 != NULL) start->Jump(start_branch_11);
-	if(start_branch_12 != NULL) start->Jump(start_branch_12);
-	if(start_branch_13 != NULL) start->Jump(start_branch_13);
-	if(start_branch_14 != NULL) start->Jump(start_branch_14);
-	if(start_branch_15 != NULL) start->Jump(start_branch_15);
-	if(start_branch_16 != NULL) start->Jump(start_branch_16);
+	if(start_branch_2 != nullptr) start->Jump(start_branch_2);
+	if(start_branch_3 != nullptr) start->Jump(start_branch_3);
+	if(start_branch_4 != nullptr) start->Jump(start_branch_4);
+	if(start_branch_5 != nullptr) start->Jump(start_branch_5);
+	if(start_branch_6 != nullptr) start->Jump(start_branch_6);
+	if(start_branch_7 != nullptr) start->Jump(start_branch_7);
+	if(start_branch_8 != nullptr) start->Jump(start_branch_8);
+	if(start_branch_9 != nullptr) start->Jump(start_branch_9);
+	if(start_branch_10 != nullptr) start->Jump(start_branch_10);
+	if(start_branch_11 != nullptr) start->Jump(start_branch_11);
+	if(start_branch_12 != nullptr) start->Jump(start_branch_12);
+	if(start_branch_13 != nullptr) start->Jump(start_branch_13);
+	if(start_branch_14 != nullptr) start->Jump(start_branch_14);
+	if(start_branch_15 != nullptr) start->Jump(start_branch_15);
+	if(start_branch_16 != nullptr) start->Jump(start_branch_16);
 
 	end_branch_0->Jump(end);
 	end_branch_1->Jump(end);
-	if(end_branch_2 != NULL) end_branch_2->Jump(end);
-	if(end_branch_3 != NULL) end_branch_3->Jump(end);
-	if(end_branch_4 != NULL) end_branch_4->Jump(end);
-	if(end_branch_5 != NULL) end_branch_5->Jump(end);
-	if(end_branch_6 != NULL) end_branch_6->Jump(end);
-	if(end_branch_7 != NULL) end_branch_7->Jump(end);
-	if(end_branch_8 != NULL) end_branch_8->Jump(end);
-	if(end_branch_9 != NULL) end_branch_9->Jump(end);
-	if(end_branch_10 != NULL) end_branch_10->Jump(end);
-	if(end_branch_11 != NULL) end_branch_11->Jump(end);
-	if(end_branch_12 != NULL) end_branch_12->Jump(end);
-	if(end_branch_13 != NULL) end_branch_13->Jump(end);
-	if(end_branch_14 != NULL) end_branch_14->Jump(end);
-	if(end_branch_15 != NULL) end_branch_15->Jump(end);
-	if(end_branch_16 != NULL) end_branch_16->Jump(end);
+	if(end_branch_2 != nullptr) end_branch_2->Jump(end);
+	if(end_branch_3 != nullptr) end_branch_3->Jump(end);
+	if(end_branch_4 != nullptr) end_branch_4->Jump(end);
+	if(end_branch_5 != nullptr) end_branch_5->Jump(end);
+	if(end_branch_6 != nullptr) end_branch_6->Jump(end);
+	if(end_branch_7 != nullptr) end_branch_7->Jump(end);
+	if(end_branch_8 != nullptr) end_branch_8->Jump(end);
+	if(end_branch_9 != nullptr) end_branch_9->Jump(end);
+	if(end_branch_10 != nullptr) end_branch_10->Jump(end);
+	if(end_branch_11 != nullptr) end_branch_11->Jump(end);
+	if(end_branch_12 != nullptr) end_branch_12->Jump(end);
+	if(end_branch_13 != nullptr) end_branch_13->Jump(end);
+	if(end_branch_14 != nullptr) end_branch_14->Jump(end);
+	if(end_branch_15 != nullptr) end_branch_15->Jump(end);
+	if(end_branch_16 != nullptr) end_branch_16->Jump(end);
 }
 
 ParserItem * ParserGeneric::_execute(const ParserPow & pow, VariantParam & param)
 {
 	if(param.isNull() == true)
-		return NULL;
+		return nullptr;
 
 	if(param.isToken() == true)
 		return AddToken(pow.Rule(), param.toToken());
@@ -677,7 +677,7 @@ ParserItem * ParserGeneric::_execute(const ParserPow & pow, VariantParam & param
 		return AddSub(pow.Rule(), param.toName());
 
 	throw ParserExceptionShouldNotArrive(__FILE__, __LINE__);
-	return NULL;
+	return nullptr;
 }
 
 void ParserGeneric::Call(ParserPow & pow)
