@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>542</width>
-    <height>528</height>
+    <height>555</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -264,7 +264,7 @@
            <property name="topMargin">
             <number>0</number>
            </property>
-           <item row="1" column="2">
+           <item row="0" column="2">
             <widget class="QToolButton" name="MibFolderChooser">
              <property name="text">
               <string>...</string>
@@ -275,91 +275,14 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label">
-             <property name="text">
-              <string>Def folder</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QToolButton" name="DefFolderChooser">
-             <property name="text">
-              <string>...</string>
-             </property>
-             <property name="icon">
-              <iconset resource="Res.qrc">
-               <normaloff>:/res/Chooser.png</normaloff>:/res/Chooser.png</iconset>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="1">
-            <widget class="QLabel" name="MibFileDefFolderEdit">
-             <property name="text">
-              <string>TextLabel</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="2">
-            <widget class="QToolButton" name="HtmlFolderChooser">
-             <property name="text">
-              <string>...</string>
-             </property>
-             <property name="icon">
-              <iconset resource="Res.qrc">
-               <normaloff>:/res/Chooser.png</normaloff>:/res/Chooser.png</iconset>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_2">
-             <property name="text">
-              <string>Mib folder</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
             <widget class="QLabel" name="MibFileMibFolderEdit">
              <property name="text">
               <string>TextLabel</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="1">
-            <widget class="QLabel" name="MibFileHtmlFolderEdit">
-             <property name="text">
-              <string>TextLabel</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_3">
-             <property name="text">
-              <string>Html folder</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="3">
-            <widget class="QToolButton" name="DefFolderOpen">
-             <property name="text">
-              <string>+</string>
-             </property>
-             <property name="icon">
-              <iconset resource="Res.qrc">
-               <normaloff>:/res/Folder.png</normaloff>:/res/Folder.png</iconset>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="3">
             <widget class="QToolButton" name="MibFolderOpen">
              <property name="text">
               <string>+</string>
@@ -370,7 +293,84 @@
              </property>
             </widget>
            </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Mib folder</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="MibFileDefFolderEdit">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Def folder</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QToolButton" name="DefFolderChooser">
+             <property name="text">
+              <string>...</string>
+             </property>
+             <property name="icon">
+              <iconset resource="Res.qrc">
+               <normaloff>:/res/Chooser.png</normaloff>:/res/Chooser.png</iconset>
+             </property>
+            </widget>
+           </item>
            <item row="2" column="3">
+            <widget class="QToolButton" name="DefFolderOpen">
+             <property name="text">
+              <string>+</string>
+             </property>
+             <property name="icon">
+              <iconset resource="Res.qrc">
+               <normaloff>:/res/Folder.png</normaloff>:/res/Folder.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_3">
+             <property name="text">
+              <string>Html folder</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="MibFileHtmlFolderEdit">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QToolButton" name="HtmlFolderChooser">
+             <property name="text">
+              <string>...</string>
+             </property>
+             <property name="icon">
+              <iconset resource="Res.qrc">
+               <normaloff>:/res/Chooser.png</normaloff>:/res/Chooser.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
             <widget class="QToolButton" name="HtmlFolderOpen">
              <property name="text">
               <string>+</string>

@@ -65,9 +65,9 @@ public:
 
 	inline void setTypeMacroModuleIdentity(void) { m_type = TypeMacroModuleIdentity; }
 	inline void setTypeMacroObjectIdentity(void) { m_type = TypeMacroObjectIdentity; }
-	inline void setTypeMacroObjectType(void) { setTypeDefined(NameMacroType()); }
+	inline void setTypeMacroObjectType(void) { m_type = TypeMacroObjectType; }
 	inline void setTypeMacroNotificationType(void) { m_type = TypeMacroNotificationType; }
-	inline void setTypeMacroTrapType(void) { m_type =TypeMacroTrapType ; }
+	inline void setTypeMacroTrapType(void) { m_type = TypeMacroTrapType ; }
 	inline void setTypeMacroTextualConvention(void) { m_type = TypeMacroTextualConvention; }
 	inline void setTypeMacroObjectGroup(void) { m_type = TypeMacroObjectGroup; }
 	inline void setTypeMacroNotificationGroup(void) { m_type = TypeMacroNotificationGroup; }
@@ -77,7 +77,6 @@ public:
 	inline void add_type_extended(const QString & str) { m_type_extended += str; }
 	inline bool is_type_extended_empty(void) const { return m_type_extended.length() == 0; }
 
-	inline bool isTypeObjectIdentifier(void) const { return m_type == TypeObjectIdentifier; }
 	inline bool isTypeDefined(void) const { return m_type == TypeDefined; }
 	inline const QString & getTypeDefined(void) const { return m_type_name; }
 

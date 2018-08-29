@@ -27,7 +27,7 @@ void SnmpTree::clear(void)
 	m_global_types.clear();
 	m_module_types.clear();
 	m_tmp_type.clear();
-	m_tmp_type_ptr = NULL;
+	m_tmp_type_ptr = nullptr;
 	m_tmp_name.clear();
 	m_type_level = 0;
 }
@@ -67,8 +67,8 @@ void SnmpTree::Dump(void) const
 	for(const auto & item : m_global_values)
 	{
 		// only dump OID values
-		if(item.m_type.isTypeObjectIdentifier() == false)
-			continue;
+//		if(item.m_type.isTypeObjectIdentifier() == false)
+//			continue;
 		if(item.isUserChoice() == true)
 			item.Dump(1);
 	}
@@ -130,62 +130,62 @@ void SnmpTree::Load(MibFolder & folder, const QString & mib_filename, bool user_
 
 SnmpTree::Jump_t SnmpTree::m_tbl_jump[] =
 {
-	{ "moduleName", On_moduleName },
-	{ "typeName", On_typeName },
-	{ "valueName", On_valueName },
-	{ "identifierName", On_valueName },
-	{ "anyName", On_anyName },
+	{ "moduleName", &SnmpTree::On_moduleName },
+	{ "typeName", &SnmpTree::On_typeName },
+	{ "valueName", &SnmpTree::On_valueName },
+	{ "identifierName", &SnmpTree::On_valueName },
+	{ "anyName", &SnmpTree::On_anyName },
 
-	{ "mibModule", On_mibModule },
-	{ "importList", On_importList },
-	{ "symbol", On_symbol },
-	{ "symbolsFromModule", On_symbolsFromModule },
-	{ "valueAssignment", On_valueAssignment },
-	{ "definedType", On_definedType },
-	{ "nullType", On_nullType },
-	{ "booleanType", On_booleanType },
-	{ "realType", On_realType },
-	{ "integerType", On_integerType },
-	{ "objectIdentifierType", On_objectIdentifierType },
-	{ "stringType", On_stringType },
-	{ "bitStringType", On_bitStringType },
-	{ "bitsType", On_bitsType },
-	{ "sequenceType", On_sequenceType },
-	{ "sequenceOfType", On_sequenceOfType },
-	{ "setType", On_setType },
-	{ "setOfType", On_setOfType },
-	{ "choiceType", On_choiceType },
-	{ "enumeratedType", On_enumeratedType },
-	{ "selectionType", On_selectionType },
-	{ "anyType", On_anyType },
-	{ "nameOrNumber1", On_nameOrNumber1 },
-	{ "nameOrNumber2", On_nameOrNumber2 },
-	{ "nameAndNumber1", On_nameAndNumber1 },
-	{ "nameAndNumber2", On_nameAndNumber2 },
-	{ "nameAndNumber2", On_nameAndNumber2 },
+	{ "mibModule", &SnmpTree::On_mibModule },
+	{ "importList", &SnmpTree::On_importList },
+	{ "symbol", &SnmpTree::On_symbol },
+	{ "symbolsFromModule", &SnmpTree::On_symbolsFromModule },
+	{ "valueAssignment", &SnmpTree::On_valueAssignment },
+	{ "definedType", &SnmpTree::On_definedType },
+	{ "nullType", &SnmpTree::On_nullType },
+	{ "booleanType", &SnmpTree::On_booleanType },
+	{ "realType", &SnmpTree::On_realType },
+	{ "integerType", &SnmpTree::On_integerType },
+	{ "objectIdentifierType", &SnmpTree::On_objectIdentifierType },
+	{ "stringType", &SnmpTree::On_stringType },
+	{ "bitStringType", &SnmpTree::On_bitStringType },
+	{ "bitsType", &SnmpTree::On_bitsType },
+	{ "sequenceType", &SnmpTree::On_sequenceType },
+	{ "sequenceOfType", &SnmpTree::On_sequenceOfType },
+	{ "setType", &SnmpTree::On_setType },
+	{ "setOfType", &SnmpTree::On_setOfType },
+	{ "choiceType", &SnmpTree::On_choiceType },
+	{ "enumeratedType", &SnmpTree::On_enumeratedType },
+	{ "selectionType", &SnmpTree::On_selectionType },
+	{ "anyType", &SnmpTree::On_anyType },
+	{ "nameOrNumber1", &SnmpTree::On_nameOrNumber1 },
+	{ "nameOrNumber2", &SnmpTree::On_nameOrNumber2 },
+	{ "nameAndNumber1", &SnmpTree::On_nameAndNumber1 },
+	{ "nameAndNumber2", &SnmpTree::On_nameAndNumber2 },
+	{ "nameAndNumber2", &SnmpTree::On_nameAndNumber2 },
 
-	{ "macroModuleIdentity", On_macroModuleIdentity },
-	{ "macroObjectIdentity", On_macroObjectIdentity },
-	{ "macroObjectType", On_macroObjectType },
-	{ "macroNotificationType", On_macroNotificationType },
-	{ "macroTrapType", On_macroTrapType },
-	{ "macroTextualConvention", On_macroTextualConvention },
-	{ "macroObjectGroup", On_macroObjectGroup },
-	{ "macroNotificationGroup", On_macroNotificationGroup },
-	{ "macroModuleCompliance", On_macroModuleCompliance },
-	{ "macroAgentCapabilities", On_macroAgentCapabilities },
+	{ "macroModuleIdentity", &SnmpTree::On_macroModuleIdentity },
+	{ "macroObjectIdentity", &SnmpTree::On_macroObjectIdentity },
+	{ "macroObjectType", &SnmpTree::On_macroObjectType },
+	{ "macroNotificationType", &SnmpTree::On_macroNotificationType },
+	{ "macroTrapType", &SnmpTree::On_macroTrapType },
+	{ "macroTextualConvention", &SnmpTree::On_macroTextualConvention },
+	{ "macroObjectGroup", &SnmpTree::On_macroObjectGroup },
+	{ "macroNotificationGroup", &SnmpTree::On_macroNotificationGroup },
+	{ "macroModuleCompliance", &SnmpTree::On_macroModuleCompliance },
+	{ "macroAgentCapabilities", &SnmpTree::On_macroAgentCapabilities },
 
-	{ "snmpDescrPart", On_snmpDescrPart },
-	{ "snmpStatusPart", On_snmpStatusPart },
-	{ "snmpAccessPart", On_snmpAccessPart },
+	{ "snmpDescrPart", &SnmpTree::On_snmpDescrPart },
+	{ "snmpStatusPart", &SnmpTree::On_snmpStatusPart },
+	{ "snmpAccessPart", &SnmpTree::On_snmpAccessPart },
 
-	{ "namedNumber", On_namedNumber },
-	{ "lowerEndPoint", On_lowerEndPoint },
-	{ "upperEndPoint", On_upperEndPoint },
-	{ "typeAssignment", On_typeAssignment },
-	{ "type1", On_type1 },
-	{ "sizeConstraint", On_sizeConstraint },
-	{ "constraint", On_constraint },
+	{ "namedNumber", &SnmpTree::On_namedNumber },
+	{ "lowerEndPoint", &SnmpTree::On_lowerEndPoint },
+	{ "upperEndPoint", &SnmpTree::On_upperEndPoint },
+	{ "typeAssignment", &SnmpTree::On_typeAssignment },
+	{ "type1", &SnmpTree::On_type1 },
+	{ "sizeConstraint", &SnmpTree::On_sizeConstraint },
+	{ "constraint", &SnmpTree::On_constraint },
 
 };
 
@@ -280,7 +280,7 @@ void SnmpTree::On_type1(int order, ParserValue &)
 		if(order == 1)
 			throw ParserExceptionShouldNotArrive(__FILE__, __LINE__);
 		else
-			m_tmp_type_ptr = NULL;
+			m_tmp_type_ptr = nullptr;
 		return;
 	}
 

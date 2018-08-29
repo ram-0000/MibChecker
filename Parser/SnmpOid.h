@@ -27,6 +27,8 @@ public:
 	inline QVector<SnmpOidMember> & getVal(void) { return m_val; }
 	bool isFullyDefined(void) const;
 
+	bool isOidValue(void) const { return getVal().size() > 1; }
+
 private:
 	QVector<SnmpOidMember> m_val;
 };

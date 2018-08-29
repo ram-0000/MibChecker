@@ -86,16 +86,16 @@ const char * SnmpType::type_str(BaseType_t type)
 	if(type == TypeEnumerated) return "ENUMERATED";
 	if(type == TypeSelection) return "SELECTION";
 	if(type == TypeAny) return "ANY";
-	if(type == TypeMacroModuleIdentity) return "Macro Module-Identity";
-	if(type == TypeMacroObjectIdentity) return "Macro Object-Identity";
-	if(type == TypeMacroObjectType) return "Macro Object-Type";
-	if(type == TypeMacroNotificationType) return "Macro Notification-Type";
-	if(type == TypeMacroTrapType) return "Macro Trap-Type";
-	if(type == TypeMacroTextualConvention) return "Macro Textual-Convention";
-	if(type == TypeMacroObjectGroup) return "Macro Object-Group";
-	if(type == TypeMacroNotificationGroup) return "Macro Notification-Group";
-	if(type == TypeMacroModuleCompliance) return "Macro Module-Compliance";
-	if(type == TypeMacroAgentCapabilities) return "Macro Agent-Capabilities";
+	if(type == TypeMacroModuleIdentity) return "MODULE-IDENTITY";
+	if(type == TypeMacroObjectIdentity) return "OBJECT-IDENTITY";
+	if(type == TypeMacroObjectType) return "OBJECT-TYPE";
+	if(type == TypeMacroNotificationType) return "NOTIFICATION-TYPE";
+	if(type == TypeMacroTrapType) return "TRAP-TYPE";
+	if(type == TypeMacroTextualConvention) return "TEXTUAL-CONVENTION";
+	if(type == TypeMacroObjectGroup) return "OBJECT-GROUP";
+	if(type == TypeMacroNotificationGroup) return "NOTIFICATION-GROUP";
+	if(type == TypeMacroModuleCompliance) return "MODULE-COMPLIANCE";
+	if(type == TypeMacroAgentCapabilities) return "AGENT-CAPABILITIES";
 	throw ParserExceptionShouldNotArrive(__FILE__, __LINE__);
 }
 

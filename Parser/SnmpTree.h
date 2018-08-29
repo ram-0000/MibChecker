@@ -14,7 +14,7 @@ class SnmpTree : public ParserAction
 {
 public:
 	SnmpTree(void);
-	~SnmpTree(void);
+	virtual ~SnmpTree(void);
 
 	void clear(void);
 

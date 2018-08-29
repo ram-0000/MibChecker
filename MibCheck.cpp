@@ -222,8 +222,8 @@ void MibCheck::_html(const QString & Name) throw (ParserException)
 		if(value.isUserChoice() == false)
 			continue;
 
-		if( (value.m_type.isTypeObjectIdentifier() == false) &&
-			 (value.m_type.isMacro() == false) )
+		// check if it is a real oid and not a simple value
+		if(value.m_oid.isOidValue() == false)
 			continue;
 
 		_print(s, "$table = array();");
