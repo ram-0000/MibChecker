@@ -11,6 +11,15 @@ MappedFile::MappedFile(const QString & name) throw (ParserException)
 	m_already_read = 0;
 	m_file_line = 0;
 
+	// check size of the file
+	QFileInfo fi(name);
+	if(fi.size() == 0)
+	{
+		// file is empty
+		throw ParserExceptionEmptyFile(FileName());
+		return;
+	}
+
 	// open the file
 	if(m_file.open(QIODevice::ReadOnly) == false)
 	{
@@ -26,6 +35,14 @@ MappedFile::MappedFile(const QString & name) throw (ParserException)
 	{
 		// unable to map filename
 		throw ParserExceptionMemoryMapping(FileName());
+		return;
+	}
+
+	// check the first char to see if there is a BOM (non ASCII char)
+	if(*m_map >= 80)
+	{
+		// unable to map filename
+		throw ParserExceptionFileWithBom(FileName());
 		return;
 	}
 
@@ -115,13 +132,13 @@ bool MappedFile::CheckRange(const char * range, char * read /*= nullptr*/)
 {
 	if( (range == nullptr) || (*range == 0) )
 		return false;
-	int len = strlen(range);
+	size_t len = strlen(range);
 	if(IsEndOfFile() == true)
 		return false;
 
 	const char * current = String();
 	char carac = *current;
-	for(int boucle = 0; boucle != len; boucle++)
+	for(size_t boucle = 0; boucle != len; boucle++)
 	{
 		if(carac != range[boucle])
 			continue;

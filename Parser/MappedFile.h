@@ -39,12 +39,12 @@ private:
 	int m_file_line;
 
 	QFile m_file;
-	quint64 m_size;
+	qint64 m_size;
 	uchar * m_map;
 
 	const char * m_current;
-	quint64 m_remaining;
-	quint64 m_already_read;
+	qint64 m_remaining;
+	qint64 m_already_read;
 
 	inline const char * String(void) const { return m_current; }
 

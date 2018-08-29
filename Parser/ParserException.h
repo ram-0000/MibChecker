@@ -9,7 +9,7 @@ public:
 	static void CheckNull(const void * Pointer);
 	static void CheckNullOrEmpty(const void * Pointer);
 
-	typedef enum { NullPointer, EmptyString, FindMibFile, OpenFile, MemoryMapping, QuotedString, NotLL1,
+	typedef enum { NullPointer, EmptyString, FindMibFile, FileWithBom, EmptyFile, OpenFile, MemoryMapping, QuotedString, NotLL1,
 						SyntaxError, SymbolNotFound, ShouldNotArrive, PopEmptyStack, CallbackNotFound,
 						SnmpValueNotFound, SnmpTypeNotFound, MibInvalidName, CreateFolder, RenameFile, CreateFile,
 						FileNotExist, FileAlreadyExist, CurrentFileSmaller, BadExtension
@@ -67,25 +67,39 @@ public:
 		: ParserException(FindMibFile, "Unable to find Mib file %1", mib) { }
 };
 
+class ParserExceptionFileWithBom : public ParserException
+{
+public:
+	inline ParserExceptionFileWithBom(const QString & mib)
+		: ParserException(FileWithBom, "Mib file %1 has BOM encoding, you MUST remove it manually", mib) { }
+};
+
+class ParserExceptionEmptyFile : public ParserException
+{
+public:
+	inline ParserExceptionEmptyFile(const QString & filename)
+		: ParserException(EmptyFile, "MIB file %1 is empty", filename) { }
+};
+
 class ParserExceptionOpenFile : public ParserException
 {
 public:
 	inline ParserExceptionOpenFile(const QString & filename)
-		: ParserException(OpenFile, "Unable to open filename %1", filename) { }
+		: ParserException(OpenFile, "Unable to open MIB file %1", filename) { }
 };
 
 class ParserExceptionMemoryMapping : public ParserException
 {
 public:
 	ParserExceptionMemoryMapping(const QString & filename)
-		: ParserException(MemoryMapping, "Unable to map filename %1", filename) { }
+		: ParserException(MemoryMapping, "Unable to map MIB file %1", filename) { }
 };
 
 class ParserExceptionQuotedString : public ParserException
 {
 public:
 	ParserExceptionQuotedString(const QString & filename, int line)
-		: ParserException(QuotedString, "Quoted String Error in file %1, line %2",
+		: ParserException(QuotedString, "Quoted String Error in MIB file %1, line %2",
 								filename, QString::number(line)) { }
 };
 
@@ -99,7 +113,7 @@ public:
 								 const QString callstack1,
 								 const QString & rule2,
 								 const QString callstack2)
-	: ParserException(NotLL1, "Bug: File %1(%2), Token '%3', Match rule %4 in %5 and rule %6 in %7",
+	: ParserException(NotLL1, "Bug: MIB File %1(%2), Token '%3', Match rule %4 in %5 and rule %6 in %7",
 			 filename, QString::number(line), token, rule1, callstack1, rule2, callstack2) { }
 };
 
@@ -107,7 +121,7 @@ class ParserExceptionSyntaxError : public ParserException
 {
 public:
 	ParserExceptionSyntaxError(const QString & filename, int line)
-		: ParserException(SyntaxError, "Syntax error file %1 line %2",
+		: ParserException(SyntaxError, "Syntax error in MIB file %1 line %2",
 								filename, QString::number(line)) { }
 };
 
@@ -214,7 +228,7 @@ class ParserExceptionBadExtension : public ParserException
 {
 public:
 	ParserExceptionBadExtension(const QString & file)
-		: ParserException(BadExtension, "File %1 has wrong extension", file) { }
+		: ParserException(BadExtension, "File %1 has wrong extension, you MUST rename it manually", file) { }
 };
 
 #endif // PARSEREXCEPTION_H
