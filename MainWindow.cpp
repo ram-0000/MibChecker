@@ -180,44 +180,8 @@ void MainWindow::_button_state(void)
 		enabled = true;
 	ui->DeleteButton->setEnabled(enabled);
 
-	// display attributes of selected files
-	_selected_file_attribute(m_check_manager, ui->CheckFileSizeEdit, ui->CheckFileDateEdit);
-	_selected_file_attribute(m_bad_manager, ui->BadFileSizeEdit, ui->BadFileDateEdit);
-
 	// reload is always enabled
 	ui->ReloadButton->setEnabled(true);
-}
-
-void MainWindow::_selected_file_attribute(FolderManager * folder_manager,
-														QLabel * size_label,
-														QLabel * date_label)
-{
-	// reset values
-	size_label->setText("---");
-	date_label->setText("---");
-
-	// only one dile must be selected
-	QList<QListWidgetItem *> file_list = folder_manager->Selected();
-	if(file_list.size() != 1)
-		return;
-
-	// build complete file name
-	QString file_name = folder_manager->Folder() + "/" + file_list[0]->text();
-	//DEBUG("file=%s", file_name.toLatin1().constData());
-	QFileInfo file_info(file_name);
-
-	// the locale
-	QLocale locale;
-
-	// size of the file
-	qint64 file_size = file_info.size();
-	QString str = locale.toString(file_size);
-	size_label->setText(str);
-
-	// modification date of the file
-	QDateTime file_modification_date = file_info.lastModified();
-	str = file_modification_date.toString(locale.dateTimeFormat());
-	date_label->setText(str);
 }
 
 void MainWindow::onClickInput(QListWidgetItem * /*item*/)

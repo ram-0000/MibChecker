@@ -60,7 +60,6 @@ private:
 	void _create_menu(void);
 	void _button_state(void);
 	void _fill_algorithm(void);
-	void _selected_file_attribute(FolderManager * folder_manager, QLabel * size_label, QLabel * date_label);
 
 	MibCheckerThread m_thread;
 	bool m_thread_running;

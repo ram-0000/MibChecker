@@ -20,6 +20,7 @@ public:
 
 private:
 	void Reselect(void);
+	void SetToolTip(QListWidgetItem * widget, const QString & Filename);
 
 	QString m_folder_name;
 	QListWidget * m_list;

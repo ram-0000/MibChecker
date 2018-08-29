@@ -1,5 +1,5 @@
-ProductVersion=0.0.7.15
-FileVersion=0.0.7.15
+ProductVersion=0.0.20.16
+FileVersion=0.0.20.16
 Comments=A checker for MIB files
 CompanyName=Circitor
 FileDescription=MibChecker

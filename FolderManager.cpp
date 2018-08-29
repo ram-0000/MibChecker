@@ -1,6 +1,7 @@
 #include "FolderManager.h"
 #include "Conf.h"
 #include <QDir>
+#include <QDateTime>
 
 FolderManager::FolderManager(const QString & Folder, QListWidget * List, QLabel * Label)
 {
@@ -24,7 +25,14 @@ void FolderManager::Reload(void)
 
 	// reset list
 	m_list->clear();
-	m_list->addItems(list_entry);
+	for(const auto & entry : list_entry)
+	{
+		// create new QListWidgetItem
+		QListWidgetItem * w = new QListWidgetItem;
+		w->setText(entry);
+		SetToolTip(w, entry);
+		m_list->addItem(w);
+	}
 
 	// display number of items
 	QString str;
@@ -34,6 +42,35 @@ void FolderManager::Reload(void)
 	m_label->setText(str);
 
 	Reselect();
+}
+
+void FolderManager::SetToolTip(QListWidgetItem * widget, const QString & Filename)
+{
+	// build complete file name
+	QString file_name = Folder() + "/" + Filename;
+	//DEBUG("file=%s", file_name.toLatin1().constData());
+	QFileInfo file_info(file_name);
+
+	// the locale
+	QLocale locale;
+	QString tip;
+
+	// name of the file
+	tip += Filename;
+
+	tip += "\r\n";
+
+	// size of the file
+	tip += locale.toString(file_info.size());
+	tip += " bytes";
+
+	tip += "\r\n";
+
+	// modification date of the file
+	tip += file_info.lastModified().toString(locale.dateTimeFormat());
+
+	// set the tooltip
+	widget->setToolTip(tip);
 }
 
 QList<QListWidgetItem *> FolderManager::Selected(void)
