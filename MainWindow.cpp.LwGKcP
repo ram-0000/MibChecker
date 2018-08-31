@@ -135,7 +135,7 @@ void MainWindow::_button_state(void)
 		ui->CheckToBadButton->setEnabled(false);
 		ui->CheckButton->setEnabled(false);
 		ui->ReloadButton->setEnabled(true);
-		ui->EditButton->setEnabled(true);
+		ui->EditButton->setEnabled(false);
 		ui->DeleteButton->setEnabled(false);
 		return;
 	}
@@ -167,19 +167,18 @@ void MainWindow::_button_state(void)
 		ui->BadToCheckButton->setEnabled(false);
 	}
 
-	// check buttons
+	// check and edit buttons
 	enabled = false;
 	if( (m_last_manager == m_check_manager) && (nb != 0) )
 		enabled = true;
 	ui->CheckButton->setEnabled(enabled);
+	ui->EditButton->setEnabled(enabled);
 
-	// delete & edit buttons
+	// delete button
 	enabled = false;
 	if(nb != 0)
 		enabled = true;
 	ui->DeleteButton->setEnabled(enabled);
-	ui->EditButton->setEnabled(enabled);
-
 
 	// reload is always enabled
 	ui->ReloadButton->setEnabled(true);

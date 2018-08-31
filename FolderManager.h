@@ -4,6 +4,7 @@
 #include <QString>
 #include <QListWidget>
 #include <QLabel>
+#include <QFileInfo>
 
 class FolderManager
 {
@@ -20,7 +21,8 @@ public:
 
 private:
 	void Reselect(void);
-	void SetToolTip(QListWidgetItem * widget, const QString & Filename);
+	void SetToolTip(QListWidgetItem * widget,
+						 const QFileInfo & fi);
 
 	QString m_folder_name;
 	QListWidget * m_list;

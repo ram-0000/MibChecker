@@ -38,12 +38,12 @@ MibLexer::Item_t MibLexer::m_table[] = {
 	{ Tok_APPLICATION				, "APPLICATION" },
 	{ Tok_AUGMENTS					, "AUGMENTS" },
 	{ Tok_BEGIN						, "BEGIN" },
-	{ Tok_BITS						, "BITS" },			// WARNING, BITS before BIT
+	{ Tok_BITS						, "BITS" },						// WARNING, BITS before BIT
 	{ Tok_BIT						, "BIT" },
 	{ Tok_BOOLEAN					, "BOOLEAN" },
 	{ Tok_BY							, "BY" },
 	{ Tok_CHOICE					, "CHOICE" },
-	{ Tok_COMPONENTS				, "COMPONENTS" },	// WARNING, COMPONENTS before COMPONENT
+	{ Tok_COMPONENTS				, "COMPONENTS" },				// WARNING, COMPONENTS before COMPONENT
 	{ Tok_COMPONENT				, "COMPONENT" },
 	{ Tok_CONTACT_INFO			, "CONTACT-INFO" },
 	{ Tok_CREATION_REQUIRES		, "CREATION-REQUIRES" },
@@ -71,9 +71,9 @@ MibLexer::Item_t MibLexer::m_table[] = {
 	{ Tok_LAST_UPDATED			, "LAST-UPDATED" },
 	{ Tok_MACRO						, "MACRO" },
 	{ Tok_MANDATORY_GROUPS		, "MANDATORY-GROUPS" },
-	{ Tok_MAX_ACCESS				, "MAX-ACCESS" },	// WARNING, MAX-ACCESS before MAX
+	{ Tok_MAX_ACCESS				, "MAX-ACCESS" },				// WARNING, MAX-ACCESS before MAX
 	{ Tok_MAX						, "MAX" },
-	{ Tok_MIN_ACCESS				, "MIN-ACCESS" },	// WARNING, MIN-ACCESS before MIN
+	{ Tok_MIN_ACCESS				, "MIN-ACCESS" },				// WARNING, MIN-ACCESS before MIN
 	{ Tok_MIN						, "MIN" },
 	{ Tok_MINUS_INFINITY			, "MINUS-INFINITY" },
 	{ Tok_MODULE_COMPLIANCE		, "MODULE-COMPLIANCE" },	// WARNING, MODULE-COMPLIANCE & MODULE-IDENTITY before MODULE
@@ -122,7 +122,7 @@ MibLexer::Item_t MibLexer::m_table[] = {
 };
 
 
-MibLexer::MibLexer(const QString & name) throw (ParserException)
+MibLexer::MibLexer(const QString & name)
 	: m_file(name)
 {
 }
@@ -144,7 +144,7 @@ const char * MibLexer::Decode(int token)
 	return "Unknown token";
 }
 
-bool MibLexer::Next(int & token, QString & extra_value) throw (ParserException)
+bool MibLexer::Next(int & token, QString & extra_value)
 {
 	// default value
 	extra_value = "";

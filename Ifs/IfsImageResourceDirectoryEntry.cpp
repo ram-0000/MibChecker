@@ -2,7 +2,9 @@
 #include "IfsImageResourceDirectory.h"
 #include "IfsPointer.h"
 
-IfsImageResourceDirectoryEntry::IfsImageResourceDirectoryEntry(const void * p_begin_section, quint32 offset, quint16 p_level)
+IfsImageResourceDirectoryEntry::IfsImageResourceDirectoryEntry(const void * p_begin_section,
+																					quint32 offset,
+																					quint16 p_level)
 	: Ifs(IfsPointer::s_Add(p_begin_section, offset), sizeof(IMAGE_RESOURCE_DIRECTORY_ENTRY))
 {
 	m_image_resource_data_entry = nullptr;

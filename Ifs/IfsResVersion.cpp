@@ -2,7 +2,7 @@
 #include "Debug.h"
 #include "Ifs.h"
 
-IfsResVersion::IfsResVersion(const void *p_ptr)
+IfsResVersion::IfsResVersion(const void * p_ptr)
 {
 	// check pointer
 	m_valid = false;
@@ -225,7 +225,8 @@ bool IfsResVersion::read_string_table(IfsPointer & p_ptr)
 	return true;
 }
 
-bool IfsResVersion::read_string(ResVersion_StringTable & stringTable, IfsPointer & p_ptr)
+bool IfsResVersion::read_string(ResVersion_StringTable & stringTable,
+										  IfsPointer & p_ptr)
 {
 	// padding alignment
 	if(padding(p_ptr) == false)
@@ -364,7 +365,10 @@ bool IfsResVersion::fill_value(quint32 & p_val, IfsPointer & p_ptr)
 	return true;
 }
 
-bool IfsResVersion::fill_value(QString & p_val, IfsPointer & p_ptr, quint32 p_len, bool p_pad)
+bool IfsResVersion::fill_value(QString & p_val,
+										 IfsPointer & p_ptr,
+										 quint32 p_len,
+										 bool p_pad)
 {
 	// read the whole string
 	quint16 nb_read = 0;
@@ -473,7 +477,8 @@ quint8 IfsResVersion::GetProductVersion4(void) const
 	return (m_version.Value.dwProductVersionMS >> 8) & 0x000000ff;
 }
 
-QString IfsResVersion::String(const QString & Name, const QString & CodePage /*= ""*/) const
+QString IfsResVersion::String(const QString & Name,
+										const QString & CodePage /*= ""*/) const
 {
 	if(IsValid() == false)
 		return "";

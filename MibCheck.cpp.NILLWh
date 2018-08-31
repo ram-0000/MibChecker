@@ -22,7 +22,6 @@ void MibCheck::_check(OverwriteAlgorithm Algo, const QString & File)
 	QString input_mib = folder_manager.BuildMibFile(m_mib_filename);
 	QString output_mib = folder_manager.OutputMibFileName();
 	m_mib_name = folder_manager.MibName();
-	input_mib = folder_manager.InputMibFileName();
 
 	// remove read only flag (if set)
 	QFile::setPermissions(input_mib, QFile::ReadOther | QFile::WriteOther);
@@ -190,34 +189,34 @@ void MibCheck::_html(const QString & Name)
 	_print(s, "body_write_begin(\"", m_mib_name, "\");", "\n");
 
 	// used modules first
-	_print(s, "$id=0;");
+	_print(s, "$id = 0;");
 	QVector<QString> list_import = m_mib_tree.m_import_manager.GetImportedModules(m_mib_filename);
 	for(const auto & item : list_import)
 		_print(s, "body_imported_module($id++, \"", item, "\");");
 	_print(s, "body_imported_module_end($id);", "\n");
 
 	// imported symbols
-	_print(s, "$id=0;");
+	_print(s, "$id = 0;");
 	QVector<QString> list_symbol = m_mib_tree.m_import_manager.GetImportedSymbol(m_mib_filename);
 	for(const auto & item : list_symbol)
 		_print(s, "body_imported_symbol($id++, \"", item, "\");");
 	_print(s, "body_imported_symbol_end($id);", "\n");
 
 	// defined types
-	_print(s, "$id=0;");
+	_print(s, "$id = 0;");
 	for(const auto & type : m_mib_tree.m_global_types)
 	{
 		if(type.isUserChoice() == false)
 			continue;
 
-		_print(s, "$table=array();");
+		_print(s, "$table = array();");
 		int idx = 0;
 		_print_type(s, type, 0, idx);
 		_print(s, "body_defined_oid($id++, \"\", \"", m_mib_filename + "::" + type.Name(), "\", \"\", $table);", "\n");
 	}
 
 	// defined values
-	_print(s, "$id=0;");
+	_print(s, "$id = 0;");
 	for(const auto & value : m_mib_tree.m_global_values)
 	{
 		if(value.isUserChoice() == false)
@@ -227,7 +226,7 @@ void MibCheck::_html(const QString & Name)
 		if(value.m_oid.isOidValue() == false)
 			continue;
 
-		_print(s, "$table=array();");
+		_print(s, "$table = array();");
 		int idx = 0;
 		_print_type(s, value.m_type, 0, idx);
 		_print(s, "body_defined_oid($id++, \"", value.m_oid.toString(), "\", \"", m_mib_filename + "::" + value.getName(), "\", \"", value.getDescription(), "\", $table);", "\n");
@@ -255,21 +254,18 @@ void MibCheck::_print_type(QTextStream & s,
 		str += type.getTypeDefined();
 	}
 
-	_print(s, "$table[", QString::number(idx), "]['Level']=", QString::number(indent), ";");
-	_print(s, "$table[", QString::number(idx), "]['Name']=\"", str, "\";");
-
-	// do not write constraint if empty
-	if(type.ConstraintStr().isEmpty() == false)
-		_print(s, "$table[", QString::number(idx), "]['Constraint']=\"", type.ConstraintStr(), "\";");
+	_print(s, "$table[", QString::number(idx), "]['Level'] = ", QString::number(indent), ";");
+	_print(s, "$table[", QString::number(idx), "]['Name'] = \"", str, "\";");
+	_print(s, "$table[", QString::number(idx), "]['Constraint'] = \"", type.ConstraintStr(), "\";");
 
 	// do not write name when indent is 0 because it is already written
 	QString name = "";
 	if(indent != 0)
 		name = type.Name();
 
-	// do not write alias if empty
-	if(name.isEmpty() == false)
-		_print(s, "$table[", QString::number(idx), "]['Alias']=\"", name, "\";");
+	// do not print alias if empty
+	if(name.IsEmpty() == false)
+		_print(s, "$table[", QString::number(idx), "]['Alias'] = \"", name, "\";");
 	idx++;
 
 	// display compound part

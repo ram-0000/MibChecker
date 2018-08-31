@@ -15,6 +15,11 @@ QString MibFolder::BuildMibFile(const QString & mib_filename)
 	if(MibName().endsWith(Conf::MibExtension()) == true)
 		m_mib_name = MibName().left(MibName().length() - Conf::MibExtension().length());
 
+	m_input_mib_filename = InputMibFolder();
+	m_input_mib_filename += "/";
+	m_input_mib_filename += MibName();
+	m_input_mib_filename += Conf::MibExtension();
+
 	m_output_mib_folder = Conf::OutputMibFolder();
 	m_output_mib_folder += "/";
 	m_output_mib_folder += MibName()[0];
@@ -43,18 +48,16 @@ QString MibFolder::BuildMibFile(const QString & mib_filename)
 	m_output_html_filename += Conf::HtmlExtension();
 
 	// build filename
+	// 1st, we try to find MIB file in local repository
+	QFileInfo check_file1(OutputMibFileName());
+	if( (check_file1.exists() == true) && (check_file1.isFile() == true) )
+		return OutputMibFileName();
+
+	// 2nd, we try to find MIB file in input folder
 	QString path = InputMibFolder();
 	path += "/";
 	path += MibName();
 	path += Conf::MibExtension();
-
-	// check if file exists and if it is a real file
-	QFileInfo check_file1(path);
-	if( (check_file1.exists() == true) && (check_file1.isFile() == true) )
-		return path;
-
-	// not found, try with repo folder
-	path = OutputMibFileName();
 
 	// check if file exists and if it is a real file
 	QFileInfo check_file2(path);

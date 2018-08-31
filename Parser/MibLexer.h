@@ -7,7 +7,7 @@
 #include "ParserException.h"
 #include "MappedFile.h"
 
-enum {
+typedef enum {
 	// pseudo tokens
 	Tok_First,
 	Tok_EndOfFile,
@@ -122,15 +122,15 @@ enum {
 	Tok_WRITE_SYNTAX,
 
 	Tok_Last
-};
+} Token_t;
 
 class MibLexer
 {
 public:
-	MibLexer(const QString & name) throw (ParserException);
+	MibLexer(const QString & name);
 	~MibLexer(void);
 
-	bool Next(int & token, QString & extra_value) throw (ParserException);
+	bool Next(int & token, QString & extra_value);
 
 	static const char * Decode(int token);
 

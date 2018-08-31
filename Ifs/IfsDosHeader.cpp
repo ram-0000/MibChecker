@@ -18,7 +18,7 @@ IfsDosHeader::~IfsDosHeader(void)
 {
 }
 
-const IMAGE_DOS_HEADER *IfsDosHeader::Get(void) const
+const IMAGE_DOS_HEADER * IfsDosHeader::Get(void) const
 {
 	return reinterpret_cast<const IMAGE_DOS_HEADER *>(Begin());
 }

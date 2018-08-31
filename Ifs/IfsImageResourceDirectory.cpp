@@ -1,7 +1,9 @@
 #include "IfsImageResourceDirectory.h"
 #include "IfsPointer.h"
 
-IfsImageResourceDirectory::IfsImageResourceDirectory(const void * p_begin_section, quint32 offset, quint16 p_level)
+IfsImageResourceDirectory::IfsImageResourceDirectory(const void * p_begin_section,
+																	  quint32 offset,
+																	  quint16 p_level)
 	: Ifs(IfsPointer::s_Add(p_begin_section, offset), sizeof(IMAGE_RESOURCE_DIRECTORY))
 {
 	// read directory entries, they are starting at the end of this structure

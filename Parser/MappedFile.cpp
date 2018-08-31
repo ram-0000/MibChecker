@@ -39,7 +39,7 @@ MappedFile::MappedFile(const QString & name) throw (ParserException)
 	}
 
 	// check the first char to see if there is a BOM (non ASCII char)
-	if(*m_map >= 80)
+	if(*m_map >= 0x80)
 	{
 		// unable to map filename
 		throw ParserExceptionFileWithBom(FileName());

@@ -28,10 +28,10 @@ private:
 	QString m_mib_name;
 	SnmpTree m_mib_tree;
 
-	void _check(OverwriteAlgorithm Algo, const QString & File) throw (ParserException);
-	void _check_overwrite(OverwriteAlgorithm Algo, const QString & input_mib, const QString & output_mib) const throw (ParserException);
-	void _def(const QString & Name) throw (ParserException);
-	void _html(const QString & Name) throw (ParserException);
+	void _check(OverwriteAlgorithm Algo, const QString & File);
+	void _check_overwrite(OverwriteAlgorithm Algo, const QString & input_mib, const QString & output_mib);
+	void _def(const QString & Name);
+	void _html(const QString & Name);
 	void _print(QTextStream & s,
 					const QString & p1 = "",
 					const QString & p2 = "",

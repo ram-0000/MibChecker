@@ -12,6 +12,7 @@ public:
 
 	inline const QString MibName(void) { return m_mib_name; }
 	inline const QString & InputMibFolder(void) const { return m_input_mib_folder; }
+	inline const QString & InputMibFileName(void) const { return m_input_mib_filename; }
 	inline const QString & OutputMibFolder(void) const { return m_output_mib_folder; }
 	inline const QString & OutputMibFileName(void) const { return m_output_mib_filename; }
 	inline const QString & OutputDefFolder(void) const { return m_output_def_folder; }
@@ -23,6 +24,7 @@ private:
 
 	QString m_mib_name;
 	QString m_input_mib_folder;
+	QString m_input_mib_filename;
 	QString m_output_mib_folder;
 	QString m_output_mib_filename;
 	QString m_output_def_folder;

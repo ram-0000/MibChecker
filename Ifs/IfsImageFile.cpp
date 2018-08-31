@@ -6,7 +6,7 @@
 // TODO ImageFile: Add more check when reading
 // TODO ImageFile: Add global validity function
 
-IfsImageFile::IfsImageFile(const char * Filename /*= nullptrptr*/)
+IfsImageFile::IfsImageFile(const char * Filename /*= nullptr*/)
 {
 	// store file path
 	m_map = nullptr;
@@ -43,7 +43,8 @@ IfsImageFile::IfsImageFile(const char * Filename /*= nullptrptr*/)
 	m_dos_header = new IfsDosHeader(m_map);
 
 	// create the nt headers, it start from dos_header + e_lfanew
-	const void * start = IfsPointer::s_Add(m_dos_header->Begin(), m_dos_header->Get()->e_lfanew);
+	const void * start = IfsPointer::s_Add(m_dos_header->Begin(),
+														static_cast<quint32>(m_dos_header->Get()->e_lfanew));
 	m_nt_headers = new IfsNtHeaders(start);
 
 	// create image section header list

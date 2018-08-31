@@ -7,11 +7,6 @@ SnmpType::SnmpType(void)
 	clear();
 }
 
-SnmpType::~SnmpType(void)
-{
-	clear();
-}
-
 void SnmpType::clear(void)
 {
 	m_name.clear();

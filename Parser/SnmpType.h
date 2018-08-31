@@ -8,7 +8,6 @@ class SnmpType
 {
 public:
 	SnmpType(void);
-	~SnmpType(void);
 
 	void clear(void);
 

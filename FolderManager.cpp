@@ -27,10 +27,34 @@ void FolderManager::Reload(void)
 	m_list->clear();
 	for(const auto & entry : list_entry)
 	{
+		// build complete file name
+		QString file_name = Folder() + "/" + entry;
+		//DEBUG("file=%s", file_name.toLatin1().constData());
+		QFileInfo file_info(file_name);
+
+		QString suffix = "." + file_info.completeSuffix();
+		if(suffix != Conf::MibExtension())
+		{
+			// old name
+			QString old_name = file_info.absoluteFilePath();
+
+			// new name
+			QString new_name = file_info.absolutePath();
+			new_name += "/";
+			new_name += file_info.baseName();
+			new_name += Conf::MibExtension();
+
+			// rename file
+			QFile::rename(old_name, new_name);
+
+			// update QFileInfo
+			file_info.setFile(new_name);
+		}
+
 		// create new QListWidgetItem
 		QListWidgetItem * w = new QListWidgetItem;
 		w->setText(entry);
-		SetToolTip(w, entry);
+		SetToolTip(w, file_info);
 		m_list->addItem(w);
 	}
 
@@ -44,30 +68,23 @@ void FolderManager::Reload(void)
 	Reselect();
 }
 
-void FolderManager::SetToolTip(QListWidgetItem * widget, const QString & Filename)
+void FolderManager::SetToolTip(QListWidgetItem * widget,
+										 const QFileInfo & fi)
 {
-	// build complete file name
-	QString file_name = Folder() + "/" + Filename;
-	//DEBUG("file=%s", file_name.toLatin1().constData());
-	QFileInfo file_info(file_name);
-
 	// the locale
 	QLocale locale;
-	QString tip;
 
 	// name of the file
-	tip += Filename;
-
+	QString tip = fi.baseName();
 	tip += "\r\n";
 
 	// size of the file
-	tip += locale.toString(file_info.size());
+	tip += locale.toString(fi.size());
 	tip += " bytes";
-
 	tip += "\r\n";
 
 	// modification date of the file
-	tip += file_info.lastModified().toString(locale.dateTimeFormat());
+	tip += fi.lastModified().toString(locale.dateTimeFormat());
 
 	// set the tooltip
 	widget->setToolTip(tip);
