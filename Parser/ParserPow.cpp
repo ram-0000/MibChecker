@@ -2,10 +2,9 @@
 #include "ParserGeneric.h"
 #include "Debug.h"
 
-ParserPow::ParserPow(ParserGeneric * This, const char * RuleName) throw (ParserException)
+ParserPow::ParserPow(ParserGeneric * This, const char * RuleName)
 {
-	ParserException::CheckNullOrEmpty(RuleName);
-
+	// A NULL RuleName indicates root og the parser
 	m_parser = This;
 	m_order = 0;
 	m_rule = RuleName;

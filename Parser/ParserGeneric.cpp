@@ -4,14 +4,14 @@
 
 ParserGeneric::ParserGeneric(ParserAction & Callback)
 {
-	m_symbol.clear();
+	m_list_symbol.clear();
 	m_parser.clear();
 	m_callback = &Callback;
 }
 
 ParserGeneric::~ParserGeneric(void)
 {
-	m_symbol.clear();
+	m_list_symbol.clear();
 	qDeleteAll(m_parser);
 	m_parser.clear();
 }
@@ -42,52 +42,61 @@ void ParserGeneric::Dump(void) const
 		(*it)->Dump();
 
 	DEBUG("Dump of symbol table");
-	for(ParserItemMap::const_iterator it = m_symbol.begin(); it != m_symbol.end(); ++it)
+	for(ParserItemMap::const_iterator it = m_list_symbol.begin(); it != m_list_symbol.end(); ++it)
 	{
-		DEBUG("%s", it.key());
+		DEBUG("%s", it.key().toLatin1().constData());
 	}
 }
 
-void ParserGeneric::Check(void)
+bool ParserGeneric::IsCalled(const char * symbol) const
 {
-	// check symbol table
-	for(ParserItemList::const_iterator it = m_parser.begin(); it != m_parser.end(); ++it)
-	{
-		ParserItem * i = *it;
-		if(i->isSub() == false) continue;
-		const char * called = i->Sub();
+	ParserException::CheckNullOrEmpty(symbol);
 
-		// check that called is existing
-		if(m_symbol.find(called) == m_symbol.end())
-		{
-			throw ParserExceptionSymbolNotFound(called, i->Rule());
-		}
+	// check symbol table
+	for(const auto & item : m_parser)
+	{
+		// check if item is a sub-caller
+		if(item->isSub() == false)
+			continue;
+
+		// get name of called sub routine
+		const char * called = item->Sub();
+
+		// compare
+		if(strcmp(symbol, called) == 0)
+			return true;
 	}
+	return false;
 }
 
-ParserItem * ParserGeneric::FindSymbolByName(const char * symbol) const throw (ParserException)
+ParserItem * ParserGeneric::FindSymbolByName(const char * symbol, bool throw_exception /*= true*/) const
 {
 	ParserException::CheckNullOrEmpty(symbol);
 
 	// try to find the symbol
-	QMap<const char *, ParserItem *>::const_iterator it = m_symbol.find(symbol);
+	ParserItemMap::const_iterator it = m_list_symbol.find(symbol);
 
 	// found ?
-	if(it == m_symbol.end())
-		throw ParserExceptionSymbolNotFound(symbol);
+	if(it == m_list_symbol.end())
+	{
+		if(throw_exception == true)
+			throw ParserExceptionSymbolNotFound(symbol);
+		else
+			return nullptr;
+	}
 
 	// return it
 	return it.value();
 }
 
-void ParserGeneric::RuleBegin(const char * RuleName) throw (ParserException)
+void ParserGeneric::RuleBegin(const char * RuleName)
 {
 	ParserException::CheckNullOrEmpty(RuleName);
 
 	AddBegin(RuleName);
 }
 
-void ParserGeneric::RuleEnd(const char * RuleName) throw (ParserException)
+void ParserGeneric::RuleEnd(const char * RuleName)
 {
 	ParserException::CheckNullOrEmpty(RuleName);
 
@@ -95,7 +104,7 @@ void ParserGeneric::RuleEnd(const char * RuleName) throw (ParserException)
 }
 
 ParserItem * ParserGeneric::AddToken(const char * RuleName,
-												 int token) throw (ParserException)
+												 int token)
 {
 	ParserException::CheckNullOrEmpty(RuleName);
 
@@ -107,7 +116,7 @@ ParserItem * ParserGeneric::AddToken(const char * RuleName,
 }
 
 ParserItem * ParserGeneric::AddGreedy(const char * RuleName,
-												 int token) throw (ParserException)
+												 int token)
 {
 	ParserException::CheckNullOrEmpty(RuleName);
 
@@ -118,7 +127,7 @@ ParserItem * ParserGeneric::AddGreedy(const char * RuleName,
 	return item;
 }
 
-ParserItem * ParserGeneric::AddJump(const char * RuleName) throw (ParserException)
+ParserItem * ParserGeneric::AddJump(const char * RuleName)
 {
 	ParserException::CheckNullOrEmpty(RuleName);
 
@@ -127,7 +136,7 @@ ParserItem * ParserGeneric::AddJump(const char * RuleName) throw (ParserExceptio
 	return _add(item);
 }
 
-ParserItem * ParserGeneric::AddPoint(const char * RuleName) throw (ParserException)
+ParserItem * ParserGeneric::AddPoint(const char * RuleName)
 {
 	ParserException::CheckNullOrEmpty(RuleName);
 
@@ -136,25 +145,25 @@ ParserItem * ParserGeneric::AddPoint(const char * RuleName) throw (ParserExcepti
 	return _add(item);
 }
 
-ParserItem * ParserGeneric::AddBegin(const char * RuleName) throw (ParserException)
+ParserItem * ParserGeneric::AddBegin(const char * RuleName)
 {
 	ParserException::CheckNullOrEmpty(RuleName);
 
 	// check if the item is already existing in symbol table
-	if(m_symbol.find(RuleName) != m_symbol.end())
-		throw ParserExceptionSymbolNotFound(RuleName);
+	if(m_list_symbol.find(RuleName) != m_list_symbol.end())
+		throw ParserExceptionSymbolAlreadyExist(RuleName);
 
 	// create item
 	ParserItem * item = new ParserItem(RuleName, ParserItem::TypeBegin);
 	_add(item);
 
 	// insert item into symbol list
-	m_symbol.insert(RuleName, item);
+	m_list_symbol.insert(RuleName, item);
 
 	return item;
 }
 
-ParserItem * ParserGeneric::AddEnd(const char * RuleName) throw (ParserException)
+ParserItem * ParserGeneric::AddEnd(const char * RuleName)
 {
 	ParserException::CheckNullOrEmpty(RuleName);
 
@@ -164,7 +173,7 @@ ParserItem * ParserGeneric::AddEnd(const char * RuleName) throw (ParserException
 }
 
 ParserItem * ParserGeneric::AddSub(const char * RuleName,
-													const char * called) throw (ParserException)
+													const char * called)
 {
 	ParserException::CheckNullOrEmpty(RuleName);
 	ParserException::CheckNullOrEmpty(called);
@@ -177,7 +186,7 @@ ParserItem * ParserGeneric::AddSub(const char * RuleName,
 }
 
 ParserItem * ParserGeneric::AddCallback(const char * RuleName,
-												int Order) throw (ParserException)
+													int Order)
 {
 	ParserException::CheckNullOrEmpty(RuleName);
 
@@ -189,7 +198,7 @@ ParserItem * ParserGeneric::AddCallback(const char * RuleName,
 	return item;
 }
 
-ParserItem * ParserGeneric::_add(ParserItem * item) throw (ParserException)
+ParserItem * ParserGeneric::_add(ParserItem * item)
 {
 	ParserException::CheckNull(item);
 
@@ -198,11 +207,10 @@ ParserItem * ParserGeneric::_add(ParserItem * item) throw (ParserException)
 	return item;
 }
 
-void ParserGeneric::Execute(const char * rule_name) throw (ParserException)
+void ParserGeneric::Execute(void)
 {
-	// set the program entry point
-	ParserException::CheckNullOrEmpty(rule_name);
-	ParserItem * item = FindSymbolByName(rule_name);
+	// search the program entry point
+	ParserItem * item = FindSymbolByName(ParserItem::Root());
 	ParserException::CheckNull(item);
 
 	// get next item following current item
@@ -265,13 +273,11 @@ bool ParserGeneric::_execute_token_type(ListParserContextExec & context, const L
 												 context.Current().CallStackStr());
 		}
 
-		/*DEBUG("File %s(%d), Token '%s'(%d), Match rule %s(%d)",
+		/*DEBUG("DEBUG Parsing: File %s(%d), Token '%s' Match rule '%s'",
 				token.MibFileName.toLatin1().constData(),
 				token.MibFileLine,
 				token.TokenStr.toLatin1().constData(),
-				token.Token,
-				context.Current().PcGet()->Rule(),
-				context.Current().PcGet()->Id());*/
+				context.Current().PcGet()->Rule());*/
 
 		// advance the PC
 		context.Current().PcNext();
@@ -429,7 +435,11 @@ void ParserGeneric::Cardinal_1(const ParserPow & pow,
 										 VariantParam param2 /*= VariantParam()*/,
 										 VariantParam param3 /*= VariantParam()*/,
 										 VariantParam param4 /*= VariantParam()*/,
-										 VariantParam param5 /*= VariantParam()*/)
+										 VariantParam param5 /*= VariantParam()*/,
+										 VariantParam param6 /*= VariantParam()*/,
+										 VariantParam param7 /*= VariantParam()*/,
+										 VariantParam param8 /*= VariantParam()*/,
+										 VariantParam param9 /*= VariantParam()*/)
 {
 	_execute(pow, param0);
 	_execute(pow, param1);
@@ -437,6 +447,10 @@ void ParserGeneric::Cardinal_1(const ParserPow & pow,
 	_execute(pow, param3);
 	_execute(pow, param4);
 	_execute(pow, param5);
+	_execute(pow, param6);
+	_execute(pow, param7);
+	_execute(pow, param8);
+	_execute(pow, param9);
 }
 
 void ParserGeneric::Cardinal_0_1(const ParserPow & pow,
@@ -445,7 +459,11 @@ void ParserGeneric::Cardinal_0_1(const ParserPow & pow,
 											VariantParam param2 /*= VariantParam()*/,
 											VariantParam param3 /*= VariantParam()*/,
 											VariantParam param4 /*= VariantParam()*/,
-											VariantParam param5 /*= VariantParam()*/)
+											VariantParam param5 /*= VariantParam()*/,
+											VariantParam param6 /*= VariantParam()*/,
+											VariantParam param7 /*= VariantParam()*/,
+											VariantParam param8 /*= VariantParam()*/,
+											VariantParam param9 /*= VariantParam()*/)
 {
 	// start
 	ParserItem * start1 = AddJump(pow.Rule());
@@ -457,6 +475,10 @@ void ParserGeneric::Cardinal_0_1(const ParserPow & pow,
 	_execute(pow, param3);
 	_execute(pow, param4);
 	_execute(pow, param5);
+	_execute(pow, param6);
+	_execute(pow, param7);
+	_execute(pow, param8);
+	_execute(pow, param9);
 
 	// end
 	ParserItem * end1 = AddPoint(pow.Rule());
@@ -472,7 +494,11 @@ void ParserGeneric::Cardinal_0_n(const ParserPow & pow,
 											VariantParam param2 /*= VariantParam()*/,
 											VariantParam param3 /*= VariantParam()*/,
 											VariantParam param4 /*= VariantParam()*/,
-											VariantParam param5 /*= VariantParam()*/)
+											VariantParam param5 /*= VariantParam()*/,
+											VariantParam param6 /*= VariantParam()*/,
+											VariantParam param7 /*= VariantParam()*/,
+											VariantParam param8 /*= VariantParam()*/,
+											VariantParam param9 /*= VariantParam()*/)
 {
 	// start
 	ParserItem * start1 = AddJump(pow.Rule());
@@ -484,6 +510,10 @@ void ParserGeneric::Cardinal_0_n(const ParserPow & pow,
 	_execute(pow, param3);
 	_execute(pow, param4);
 	_execute(pow, param5);
+	_execute(pow, param6);
+	_execute(pow, param7);
+	_execute(pow, param8);
+	_execute(pow, param9);
 
 	// end
 	ParserItem * start2 = AddJump(pow.Rule());
@@ -502,7 +532,11 @@ void ParserGeneric::Cardinal_1_n(const ParserPow & pow,
 											VariantParam param2 /*= VariantParam()*/,
 											VariantParam param3 /*= VariantParam()*/,
 											VariantParam param4 /*= VariantParam()*/,
-											VariantParam param5 /*= VariantParam()*/)
+											VariantParam param5 /*= VariantParam()*/,
+											VariantParam param6 /*= VariantParam()*/,
+											VariantParam param7 /*= VariantParam()*/,
+											VariantParam param8 /*= VariantParam()*/,
+											VariantParam param9 /*= VariantParam()*/)
 {
 	// actions
 	ParserItem * item1 = _execute(pow, param0);
@@ -511,6 +545,10 @@ void ParserGeneric::Cardinal_1_n(const ParserPow & pow,
 	_execute(pow, param3);
 	_execute(pow, param4);
 	_execute(pow, param5);
+	_execute(pow, param6);
+	_execute(pow, param7);
+	_execute(pow, param8);
+	_execute(pow, param9);
 
 	// end
 	ParserItem * start1 = AddJump(pow.Rule());
@@ -538,7 +576,7 @@ void ParserGeneric::_branch(const ParserPow & pow,
 
 void ParserGeneric::Branch(const ParserPow & pow,
 									VariantParam branch_0,
-									VariantParam branch_1,
+									VariantParam branch_1 /*= VariantParam()*/,
 									VariantParam branch_2 /*= VariantParam()*/,
 									VariantParam branch_3 /*= VariantParam()*/,
 									VariantParam branch_4 /*= VariantParam()*/,
@@ -553,7 +591,10 @@ void ParserGeneric::Branch(const ParserPow & pow,
 									VariantParam branch_13 /*= VariantParam()*/,
 									VariantParam branch_14 /*= VariantParam()*/,
 									VariantParam branch_15 /*= VariantParam()*/,
-									VariantParam branch_16 /*= VariantParam()*/)
+									VariantParam branch_16 /*= VariantParam()*/,
+									VariantParam branch_17 /*= VariantParam()*/,
+									VariantParam branch_18 /*= VariantParam()*/,
+									VariantParam branch_19 /*= VariantParam()*/)
 {
 	ParserItem * start = AddJump(pow.Rule());
 
@@ -625,11 +666,23 @@ void ParserGeneric::Branch(const ParserPow & pow,
 	ParserItem * end_branch_16;
 	_branch(pow, start_branch_16, end_branch_16, branch_16);
 
+	ParserItem * start_branch_17;
+	ParserItem * end_branch_17;
+	_branch(pow, start_branch_17, end_branch_17, branch_17);
+
+	ParserItem * start_branch_18;
+	ParserItem * end_branch_18;
+	_branch(pow, start_branch_18, end_branch_18, branch_18);
+
+	ParserItem * start_branch_19;
+	ParserItem * end_branch_19;
+	_branch(pow, start_branch_19, end_branch_19, branch_19);
+
 	ParserItem * end = AddPoint(pow.Rule());
 
 	// add jump
 	start->Jump(start_branch_0);
-	start->Jump(start_branch_1);
+	if(start_branch_1 != nullptr) start->Jump(start_branch_1);
 	if(start_branch_2 != nullptr) start->Jump(start_branch_2);
 	if(start_branch_3 != nullptr) start->Jump(start_branch_3);
 	if(start_branch_4 != nullptr) start->Jump(start_branch_4);
@@ -645,9 +698,12 @@ void ParserGeneric::Branch(const ParserPow & pow,
 	if(start_branch_14 != nullptr) start->Jump(start_branch_14);
 	if(start_branch_15 != nullptr) start->Jump(start_branch_15);
 	if(start_branch_16 != nullptr) start->Jump(start_branch_16);
+	if(start_branch_17 != nullptr) start->Jump(start_branch_17);
+	if(start_branch_18 != nullptr) start->Jump(start_branch_18);
+	if(start_branch_19 != nullptr) start->Jump(start_branch_19);
 
 	end_branch_0->Jump(end);
-	end_branch_1->Jump(end);
+	if(end_branch_1 != nullptr) end_branch_1->Jump(end);
 	if(end_branch_2 != nullptr) end_branch_2->Jump(end);
 	if(end_branch_3 != nullptr) end_branch_3->Jump(end);
 	if(end_branch_4 != nullptr) end_branch_4->Jump(end);
@@ -663,6 +719,9 @@ void ParserGeneric::Branch(const ParserPow & pow,
 	if(end_branch_14 != nullptr) end_branch_14->Jump(end);
 	if(end_branch_15 != nullptr) end_branch_15->Jump(end);
 	if(end_branch_16 != nullptr) end_branch_16->Jump(end);
+	if(end_branch_17 != nullptr) end_branch_17->Jump(end);
+	if(end_branch_18 != nullptr) end_branch_18->Jump(end);
+	if(end_branch_19 != nullptr) end_branch_19->Jump(end);
 }
 
 ParserItem * ParserGeneric::_execute(const ParserPow & pow, VariantParam & param)
@@ -683,4 +742,28 @@ ParserItem * ParserGeneric::_execute(const ParserPow & pow, VariantParam & param
 void ParserGeneric::Call(ParserPow & pow)
 {
 	AddCallback(pow.Rule(), pow.Order());
+}
+
+void ParserGeneric::CheckParser(void) const
+{
+	// iterate through the tree
+	for(const auto & item : m_parser)
+	{
+		if(item->isSub() == true)
+		{
+			// check that called sub is existing
+			if(FindSymbolByName(item->Sub(), false) == nullptr)
+			{
+				throw ParserExceptionRuleNotExist(item->Sub(), item->Rule());
+			}
+		}
+
+		if(item->isBegin() == true)
+		{
+			if( (item->isRoot() == false) && (IsCalled(item->Rule()) == false) )
+			{
+				throw ParserExceptionRuleNotCalled(item->Rule());
+			}
+		}
+	}
 }

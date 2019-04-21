@@ -22,12 +22,12 @@ public:
 	} LexToken_t;
 
 	ParserGeneric(ParserAction & Callback);
-	~ParserGeneric(void);
+	virtual ~ParserGeneric(void);
 
-	void RuleBegin(const char * RuleName) throw (ParserException);
-	void RuleEnd(const char * RuleName) throw (ParserException);
+	void RuleBegin(const char * RuleName);
+	void RuleEnd(const char * RuleName);
 
-	void Execute(const char * rule_name) throw (ParserException);
+	void Execute(void);
 
 	// to ask the next token to the lexer
 	virtual bool NextToken(LexToken_t & token) = 0;
@@ -50,7 +50,11 @@ protected:
 						 VariantParam param2 = VariantParam(),
 						 VariantParam param3 = VariantParam(),
 						 VariantParam param4 = VariantParam(),
-						 VariantParam param5 = VariantParam());
+						 VariantParam param5 = VariantParam(),
+						 VariantParam param6 = VariantParam(),
+						 VariantParam param7 = VariantParam(),
+						 VariantParam param8 = VariantParam(),
+						 VariantParam param9 = VariantParam());
 
 	// 0 or 1 item
 	void Cardinal_0_1(const ParserPow & pow,
@@ -59,7 +63,11 @@ protected:
 							VariantParam param2 = VariantParam(),
 							VariantParam param3 = VariantParam(),
 							VariantParam param4 = VariantParam(),
-							VariantParam param5 = VariantParam());
+							VariantParam param5 = VariantParam(),
+							VariantParam param6 = VariantParam(),
+							VariantParam param7 = VariantParam(),
+							VariantParam param8 = VariantParam(),
+							VariantParam param9 = VariantParam());
 
 	// 0 or n items
 	void Cardinal_0_n(const ParserPow & pow,
@@ -68,7 +76,11 @@ protected:
 							VariantParam param2 = VariantParam(),
 							VariantParam param3 = VariantParam(),
 							VariantParam param4 = VariantParam(),
-							VariantParam param5 = VariantParam());
+							VariantParam param5 = VariantParam(),
+							VariantParam param6 = VariantParam(),
+							VariantParam param7 = VariantParam(),
+							VariantParam param8 = VariantParam(),
+							VariantParam param9 = VariantParam());
 
 	// 1 or n items
 	void Cardinal_1_n(const ParserPow & pow,
@@ -77,11 +89,15 @@ protected:
 							VariantParam param2 = VariantParam(),
 							VariantParam param3 = VariantParam(),
 							VariantParam param4 = VariantParam(),
-							VariantParam param5 = VariantParam());
+							VariantParam param5 = VariantParam(),
+							VariantParam param6 = VariantParam(),
+							VariantParam param7 = VariantParam(),
+							VariantParam param8 = VariantParam(),
+							VariantParam param9 = VariantParam());
 
 	void Branch(const ParserPow & pow,
 					VariantParam branch_0,
-					VariantParam branch_1,
+					VariantParam branch_1 = VariantParam(),
 					VariantParam branch_2 = VariantParam(),
 					VariantParam branch_3 = VariantParam(),
 					VariantParam branch_4 = VariantParam(),
@@ -96,29 +112,34 @@ protected:
 					VariantParam branch_13 = VariantParam(),
 					VariantParam branch_14 = VariantParam(),
 					VariantParam branch_15 = VariantParam(),
-					VariantParam branch_16 = VariantParam());
+					VariantParam branch_16 = VariantParam(),
+					VariantParam branch_17 = VariantParam(),
+					VariantParam branch_18 = VariantParam(),
+					VariantParam branch_19 = VariantParam());
 
 	void Dump(void) const;
-	void Check(void);
 
-	ParserItem * AddToken(const char * RuleName, int token) throw (ParserException);
-	ParserItem * AddGreedy(const char * RuleName, int token) throw (ParserException);
-	ParserItem * AddJump(const char * RuleName) throw (ParserException);
-	ParserItem * AddPoint(const char * RuleName) throw (ParserException);
-	ParserItem * AddBegin(const char * RuleName) throw (ParserException);
-	ParserItem * AddEnd(const char * RuleName) throw (ParserException);
-	ParserItem * AddSub(const char * RuleName, const char * called) throw (ParserException);
-	ParserItem * AddCallback(const char * RuleName, int Order) throw (ParserException);
+	ParserItem * AddToken(const char * RuleName, int token);
+	ParserItem * AddGreedy(const char * RuleName, int token);
+	ParserItem * AddJump(const char * RuleName);
+	ParserItem * AddPoint(const char * RuleName);
+	ParserItem * AddBegin(const char * RuleName);
+	ParserItem * AddEnd(const char * RuleName);
+	ParserItem * AddSub(const char * RuleName, const char * called);
+	ParserItem * AddCallback(const char * RuleName, int Order);
 
-	ParserItem * FindSymbolByName(const char * symbol) const throw (ParserException);
+	ParserItem * FindSymbolByName(const char * symbol, bool throw_exception = true) const;
+	bool IsCalled(const char * symbol) const;
+
+	void CheckParser(void) const;
 
 private:
 	ParserItem * _execute(const ParserPow &pow, VariantParam & param);
 	void _branch(const ParserPow & pow, ParserItem * & start, ParserItem * & end, VariantParam & param);
-	ParserItem * _add(ParserItem * item) throw (ParserException);
+	ParserItem * _add(ParserItem * item);
 
 	ParserItemList m_parser;
-	ParserItemMap m_symbol;
+	ParserItemMap m_list_symbol;
 
 	bool _execute_token_type(ListParserContextExec & context, const LexToken_t & token);
 	void _execute_greedy_type(ListParserContextExec & context, LexToken_t & token);

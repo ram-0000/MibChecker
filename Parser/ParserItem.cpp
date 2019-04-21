@@ -28,13 +28,13 @@ ParserItem::~ParserItem(void)
 	m_jump_table.clear();
 }
 
-ParserItem * ParserItem::Next(void) const throw (ParserException)
+ParserItem * ParserItem::Next(void) const
 {
 	ParserException::CheckNull(m_next);
 	return m_next;
 }
 
-void ParserItem::Finalize(int id, ParserItem * next) throw (ParserException)
+void ParserItem::Finalize(int id, ParserItem * next)
 {
 	if(m_id != -1)
 		throw ParserExceptionShouldNotArrive(__FILE__, __LINE__);
@@ -45,21 +45,21 @@ void ParserItem::Finalize(int id, ParserItem * next) throw (ParserException)
 	m_next = next;
 }
 
-int ParserItem::Id(void) const throw (ParserException)
+int ParserItem::Id(void) const
 {
 	if(m_id == -1)
 		throw ParserExceptionShouldNotArrive(__FILE__, __LINE__);
 	return m_id;
 }
 
-void ParserItem::Token(int token) throw (ParserException)
+void ParserItem::Token(int token)
 {
 	if( (isToken() == false) && (isGreedy() == false) )
 		throw ParserExceptionShouldNotArrive(__FILE__, __LINE__);
 	m_value_number = token;
 }
 
-int ParserItem::Token(void) const throw (ParserException)
+int ParserItem::Token(void) const
 {
 	if( (isToken() == false) && (isGreedy() == false) )
 		throw ParserExceptionShouldNotArrive(__FILE__, __LINE__);
@@ -68,7 +68,7 @@ int ParserItem::Token(void) const throw (ParserException)
 	return m_value_number;
 }
 
-void ParserItem::Sub(const char * sub) throw (ParserException)
+void ParserItem::Sub(const char * sub)
 {
 	if(isSub() == false)
 		throw ParserExceptionShouldNotArrive(__FILE__, __LINE__);
@@ -76,7 +76,7 @@ void ParserItem::Sub(const char * sub) throw (ParserException)
 	m_value_string = sub;
 }
 
-const char * ParserItem::Sub(void) const throw (ParserException)
+const char * ParserItem::Sub(void) const
 {
 	if(isSub() == false)
 		throw ParserExceptionShouldNotArrive(__FILE__, __LINE__);
@@ -84,7 +84,7 @@ const char * ParserItem::Sub(void) const throw (ParserException)
 	return m_value_string;
 }
 
-void ParserItem::Jump(ParserItem * jump)  throw (ParserException)
+void ParserItem::Jump(ParserItem * jump)
 {
 	// only branch items can be jumpers
 	if(isJump() == false)
@@ -94,7 +94,7 @@ void ParserItem::Jump(ParserItem * jump)  throw (ParserException)
 	m_jump_table.push_back(jump);
 }
 
-const ParserItemList & ParserItem::Jump(void) const throw (ParserException)
+const ParserItemList & ParserItem::Jump(void) const
 {
 	// only start and branch items can be jumpers
 	if(isJump() == false)
@@ -108,7 +108,7 @@ const char * ParserItem::TypeStr(void) const
 	switch(Type())
 	{
 	case TypeToken: return "Token";
-	case TypeGreedy: return "Token";
+	case TypeGreedy: return "Greedy";
 	case TypeJump: return "Jump";
 	case TypePoint: return "Point";
 	case TypeBegin: return "Begin";

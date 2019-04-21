@@ -15,6 +15,12 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="leftMargin">
+     <number>9</number>
+    </property>
+    <property name="topMargin">
+     <number>9</number>
+    </property>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
@@ -23,20 +29,32 @@
          <string>Input MIB Files to check</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_4">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_5">
            <property name="topMargin">
             <number>0</number>
            </property>
            <item>
-            <widget class="QLabel" name="MibFileCheckFolderEdit">
+            <widget class="QLabel" name="InputFolderEdit">
              <property name="text">
               <string>TextLabel</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QToolButton" name="ChooseInputFolderButton">
+            <widget class="QToolButton" name="InputFolderChooseButton">
              <property name="text">
               <string>...</string>
              </property>
@@ -47,13 +65,24 @@
             </widget>
            </item>
            <item>
-            <widget class="QToolButton" name="OpenInputButton">
+            <widget class="QToolButton" name="InputFolderOpenButton">
              <property name="text">
               <string>+</string>
              </property>
              <property name="icon">
               <iconset resource="Res.qrc">
                <normaloff>:/res/Folder.png</normaloff>:/res/Folder.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="InputFolderCmdButton">
+             <property name="text">
+              <string>...</string>
+             </property>
+             <property name="icon">
+              <iconset resource="Res.qrc">
+               <normaloff>:/res/Cmd.png</normaloff>:/res/Cmd.png</iconset>
              </property>
             </widget>
            </item>
@@ -157,20 +186,32 @@
          <string>Bad MIB Files</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_3">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <property name="topMargin">
             <number>0</number>
            </property>
            <item>
-            <widget class="QLabel" name="MibFileBadFolderEdit">
+            <widget class="QLabel" name="BadFolderEdit">
              <property name="text">
               <string>TextLabel</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QToolButton" name="ChooseBadFolderButton">
+            <widget class="QToolButton" name="BadFolderChooseButton">
              <property name="text">
               <string>...</string>
              </property>
@@ -181,13 +222,24 @@
             </widget>
            </item>
            <item>
-            <widget class="QToolButton" name="OpenBadButton">
+            <widget class="QToolButton" name="BadFolderOpenButton">
              <property name="text">
               <string>+</string>
              </property>
              <property name="icon">
               <iconset resource="Res.qrc">
                <normaloff>:/res/Folder.png</normaloff>:/res/Folder.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="BadFolderCmdButton">
+             <property name="text">
+              <string>...</string>
+             </property>
+             <property name="icon">
+              <iconset resource="Res.qrc">
+               <normaloff>:/res/Cmd.png</normaloff>:/res/Cmd.png</iconset>
              </property>
             </widget>
            </item>
@@ -228,6 +280,18 @@
        <string>Error</string>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QTextEdit" name="ErrorEdit">
          <property name="readOnly">
@@ -251,6 +315,18 @@
        <string>Output control</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QGroupBox" name="groupBox_5">
          <property name="title">
@@ -270,7 +346,7 @@
            <number>0</number>
           </property>
           <item row="0" column="2">
-           <widget class="QToolButton" name="MibFolderChooser">
+           <widget class="QToolButton" name="OutputMibFolderChooserButton">
             <property name="text">
              <string>...</string>
             </property>
@@ -280,17 +356,10 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QLabel" name="MibFileMibFolderEdit">
+          <item row="1" column="9">
+           <widget class="QToolButton" name="OutputIncFolderOpenButton">
             <property name="text">
-             <string>TextLabel</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QToolButton" name="MibFolderOpen">
-            <property name="text">
-             <string>+</string>
+             <string>...</string>
             </property>
             <property name="icon">
              <iconset resource="Res.qrc">
@@ -298,35 +367,8 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="MibFolderLabel">
-            <property name="text">
-             <string>Mib folder</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="HtmlFolderLabel">
-            <property name="text">
-             <string>Html folder</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLabel" name="MibFileHtmlFolderEdit">
-            <property name="text">
-             <string>TextLabel</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QToolButton" name="HtmlFolderChooser">
+          <item row="0" column="8">
+           <widget class="QToolButton" name="OutputDefFolderChooserButton">
             <property name="text">
              <string>...</string>
             </property>
@@ -336,19 +378,19 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="3">
-           <widget class="QToolButton" name="HtmlFolderOpen">
+          <item row="1" column="8">
+           <widget class="QToolButton" name="OutputIncFolderChooserButton">
             <property name="text">
-             <string>+</string>
+             <string>...</string>
             </property>
             <property name="icon">
              <iconset resource="Res.qrc">
-              <normaloff>:/res/Folder.png</normaloff>:/res/Folder.png</iconset>
+              <normaloff>:/res/Chooser.png</normaloff>:/res/Chooser.png</iconset>
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="DefFolderLabel">
+          <item row="0" column="6">
+           <widget class="QLabel" name="OutputDefFolderLabel">
             <property name="text">
              <string>Def folder</string>
             </property>
@@ -357,36 +399,7 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QLabel" name="MibFileDefFolderEdit">
-            <property name="text">
-             <string>TextLabel</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="2">
-           <widget class="QToolButton" name="DefFolderChooser">
-            <property name="text">
-             <string>...</string>
-            </property>
-            <property name="icon">
-             <iconset resource="Res.qrc">
-              <normaloff>:/res/Chooser.png</normaloff>:/res/Chooser.png</iconset>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="3">
-           <widget class="QToolButton" name="DefFolderOpen">
-            <property name="text">
-             <string>+</string>
-            </property>
-            <property name="icon">
-             <iconset resource="Res.qrc">
-              <normaloff>:/res/Folder.png</normaloff>:/res/Folder.png</iconset>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="4">
+          <item row="0" column="5">
            <spacer name="horizontalSpacer">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -398,6 +411,149 @@
              </size>
             </property>
            </spacer>
+          </item>
+          <item row="1" column="6">
+           <widget class="QLabel" name="OutputIncFolderLabel">
+            <property name="text">
+             <string>Inc Folder</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="7">
+           <widget class="QLabel" name="OutputDefFolderEdit">
+            <property name="text">
+             <string>TextLabel</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="7">
+           <widget class="QLabel" name="OutputIncFolderEdit">
+            <property name="text">
+             <string>TextLabel</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QToolButton" name="OutputMibFolderCmdButton">
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="Res.qrc">
+              <normaloff>:/res/Cmd.png</normaloff>:/res/Cmd.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QToolButton" name="OutputHtmlFolderOpenButton">
+            <property name="text">
+             <string>+</string>
+            </property>
+            <property name="icon">
+             <iconset resource="Res.qrc">
+              <normaloff>:/res/Folder.png</normaloff>:/res/Folder.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="OutputMibFolderLabel">
+            <property name="text">
+             <string>Mib folder</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="OutputHtmlFolderLabel">
+            <property name="text">
+             <string>Html folder</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
+           <widget class="QToolButton" name="OutputHtmlFolderCmdButton">
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="Res.qrc">
+              <normaloff>:/res/Cmd.png</normaloff>:/res/Cmd.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QToolButton" name="OutputMibFolderOpenButton">
+            <property name="text">
+             <string>+</string>
+            </property>
+            <property name="icon">
+             <iconset resource="Res.qrc">
+              <normaloff>:/res/Folder.png</normaloff>:/res/Folder.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="OutputHtmlFolderEdit">
+            <property name="text">
+             <string>TextLabel</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="OutputMibFolderEdit">
+            <property name="text">
+             <string>TextLabel</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="9">
+           <widget class="QToolButton" name="OutputDefFolderOpenButton">
+            <property name="text">
+             <string>+</string>
+            </property>
+            <property name="icon">
+             <iconset resource="Res.qrc">
+              <normaloff>:/res/Folder.png</normaloff>:/res/Folder.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QToolButton" name="OutputHtmlFolderChooserButton">
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="Res.qrc">
+              <normaloff>:/res/Chooser.png</normaloff>:/res/Chooser.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="10">
+           <widget class="QToolButton" name="OutputDefFolderCmdButton">
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="Res.qrc">
+              <normaloff>:/res/Cmd.png</normaloff>:/res/Cmd.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="10">
+           <widget class="QToolButton" name="OutputIncFolderCmdButton">
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="Res.qrc">
+              <normaloff>:/res/Cmd.png</normaloff>:/res/Cmd.png</iconset>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>

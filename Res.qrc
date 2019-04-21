@@ -4,5 +4,6 @@
         <file>res/MibChecker.png</file>
         <file>res/Folder.png</file>
         <file>res/Chooser.png</file>
+        <file>res/Cmd.png</file>
     </qresource>
 </RCC>

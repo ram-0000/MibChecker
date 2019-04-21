@@ -14,7 +14,7 @@ public:
 	void Reset(void);
 	bool isSet(void) const;
 
-	inline size_t CallStackSize(void) const {  return m_callstack.size(); }
+	inline int CallStackSize(void) const { return m_callstack.size(); }
 	void CallStackPush(ParserItem * item);
 	void CallStackPop(void);
 	QString CallStackStr(void) const;

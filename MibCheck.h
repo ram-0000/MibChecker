@@ -30,6 +30,8 @@ private:
 
 	void _check(OverwriteAlgorithm Algo, const QString & File);
 	void _check_overwrite(OverwriteAlgorithm Algo, const QString & input_mib, const QString & output_mib);
+	void _inc(void);
+	void _create_inc_file(const QString & module);
 	void _def(const QString & Name);
 	void _html(const QString & Name);
 	void _print(QTextStream & s,

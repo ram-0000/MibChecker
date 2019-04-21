@@ -6,6 +6,7 @@
 #include "Conf.h"
 #include "DlgAbout.h"
 #include "EditorProcess.h"
+#include "ShellProcess.h"
 #include "MibCheck.h"
 #include <QDesktopServices>
 #include <QFileDialog>
@@ -22,10 +23,10 @@ MainWindow::MainWindow(QWidget * parent /*= nullptr*/)
 	_create_menu();
 
 	// create folder managers
-	m_check_manager = new FolderManager(ui->MibFileCheckFolderEdit->text(),
+	m_check_manager = new FolderManager(ui->InputFolderEdit->text(),
 													ui->MibFileCheckList,
 													ui->MibFileCheckLabel);
-	m_bad_manager = new FolderManager(ui->MibFileBadFolderEdit->text(),
+	m_bad_manager = new FolderManager(ui->BadFolderEdit->text(),
 												 ui->MibFileBadList,
 												 ui->MibFileBadLabel);
 	m_last_manager = nullptr;
@@ -45,19 +46,35 @@ MainWindow::MainWindow(QWidget * parent /*= nullptr*/)
 	connect(ui->CheckButton, SIGNAL(clicked()), this, SLOT(onCheck()));
 	connect(ui->ReloadButton, SIGNAL(clicked()), this, SLOT(onReload()));
 	connect(ui->ClearButton, SIGNAL(clicked()), this, SLOT(onClear()));
-	connect(ui->OpenInputButton, SIGNAL(clicked(bool)), this, SLOT(onOpenInput()));
-	connect(ui->OpenBadButton, SIGNAL(clicked(bool)), this, SLOT(onOpenBad()));
-	connect(ui->ChooseInputFolderButton, SIGNAL(clicked(bool)), this, SLOT(onChooseInputFolder()));
-	connect(ui->ChooseBadFolderButton, SIGNAL(clicked(bool)), this, SLOT(onChooseBadFolder()));
-	connect(ui->DefFolderChooser, SIGNAL(clicked(bool)), this, SLOT(onDefFolderChooser()));
-	connect(ui->MibFolderChooser, SIGNAL(clicked(bool)), this, SLOT(onMibFolderChooser()));
-	connect(ui->HtmlFolderChooser, SIGNAL(clicked(bool)), this, SLOT(onHtmlFolderChooser()));
-	connect(ui->DefFolderOpen, SIGNAL(clicked(bool)), this, SLOT(onDefFolderOpen()));
-	connect(ui->MibFolderOpen, SIGNAL(clicked(bool)), this, SLOT(onMibFolderOpen()));
-	connect(ui->HtmlFolderOpen, SIGNAL(clicked(bool)), this, SLOT(onHtmlFolderOpen()));
-	connect(ui->comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onAlgorithmChanged()));
 	connect(ui->CheckToBadButton, SIGNAL(clicked()), this, SLOT(onCheckToBadFolder()));
 	connect(ui->BadToCheckButton, SIGNAL(clicked()), this, SLOT(onBadToCheckFolder()));
+
+	connect(ui->InputFolderOpenButton, SIGNAL(clicked(bool)), this, SLOT(onInputFolderOpen()));
+	connect(ui->InputFolderChooseButton, SIGNAL(clicked(bool)), this, SLOT(onInputFolderChoose()));
+	connect(ui->InputFolderCmdButton, SIGNAL(clicked(bool)), this, SLOT(onInputFolderCmd()));
+
+	connect(ui->BadFolderOpenButton, SIGNAL(clicked(bool)), this, SLOT(onBadFolderOpen()));
+	connect(ui->BadFolderChooseButton, SIGNAL(clicked(bool)), this, SLOT(onBadFolderChoose()));
+	connect(ui->BadFolderCmdButton, SIGNAL(clicked(bool)), this, SLOT(onBadFolderCmd()));
+
+	connect(ui->OutputMibFolderChooserButton, SIGNAL(clicked(bool)), this, SLOT(onOutputMibFolderChooser()));
+	connect(ui->OutputMibFolderOpenButton, SIGNAL(clicked(bool)), this, SLOT(onOutputMibFolderOpen()));
+	connect(ui->OutputMibFolderCmdButton, SIGNAL(clicked(bool)), this, SLOT(onOutputMibFolderCmd()));
+
+	connect(ui->OutputHtmlFolderChooserButton, SIGNAL(clicked(bool)), this, SLOT(onOutputHtmlFolderChooser()));
+	connect(ui->OutputHtmlFolderOpenButton, SIGNAL(clicked(bool)), this, SLOT(onOutputHtmlFolderOpen()));
+	connect(ui->OutputHtmlFolderCmdButton, SIGNAL(clicked(bool)), this, SLOT(onOutputHtmlFolderCmd()));
+
+	connect(ui->OutputDefFolderChooserButton, SIGNAL(clicked(bool)), this, SLOT(onOutputDefFolderChooser()));
+	connect(ui->OutputDefFolderOpenButton, SIGNAL(clicked(bool)), this, SLOT(onOutputDefFolderOpen()));
+	connect(ui->OutputDefFolderCmdButton, SIGNAL(clicked(bool)), this, SLOT(onOutputDefFolderCmd()));
+
+	connect(ui->OutputIncFolderChooserButton, SIGNAL(clicked(bool)), this, SLOT(onOutputIncFolderChooser()));
+	connect(ui->OutputIncFolderOpenButton, SIGNAL(clicked(bool)), this, SLOT(onOutputIncFolderOpen()));
+	connect(ui->OutputIncFolderCmdButton, SIGNAL(clicked(bool)), this, SLOT(onOutputIncFolderCmd()));
+
+	connect(ui->comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onAlgorithmChanged()));
+
 	connect(&m_thread, SIGNAL(threadStarted(int)), this, SLOT(onThreadStarted(int)));
 	connect(&m_thread, SIGNAL(threadRunning(int, const QString, const QString)), this, SLOT(onThreadRunning(int, const QString, const QString)));
 	connect(&m_thread, SIGNAL(threadFinished()), this, SLOT(onThreadFinished()));
@@ -89,11 +106,12 @@ void MainWindow::_read_setting(void)
 	// set window icon
 	setWindowIcon(QIcon(":/res/MibChecker.png"));
 
-	ui->MibFileCheckFolderEdit->setText(Conf::InputFolder());
-	ui->MibFileBadFolderEdit->setText(Conf::BadFolder());
-	ui->MibFileDefFolderEdit->setText(Conf::OutputDefFolder());
-	ui->MibFileHtmlFolderEdit->setText(Conf::OutputHtmlFolder());
-	ui->MibFileMibFolderEdit->setText(Conf::OutputMibFolder());
+	ui->InputFolderEdit->setText(Conf::InputFolder());
+	ui->BadFolderEdit->setText(Conf::BadFolder());
+	ui->OutputDefFolderEdit->setText(Conf::OutputDefFolder());
+	ui->OutputIncFolderEdit->setText(Conf::OutputIncFolder());
+	ui->OutputHtmlFolderEdit->setText(Conf::OutputHtmlFolder());
+	ui->OutputMibFolderEdit->setText(Conf::OutputMibFolder());
 }
 
 void MainWindow::_write_setting(void)
@@ -105,7 +123,7 @@ void MainWindow::_write_setting(void)
 
 void MainWindow::_create_menu(void)
 {
-	QAction * aboutAct = new QAction("F1\tÀ propos", this);
+	QAction * aboutAct = new QAction("À propos", this);
 	aboutAct->setShortcut(Qt::Key_F1);
 	aboutAct->setStatusTip("À propos");
 	connect(aboutAct, &QAction::triggered, this, &MainWindow::onAbout);
@@ -287,17 +305,47 @@ void MainWindow::onClear(void)
 	m_error->Clear();
 }
 
-void MainWindow::onOpenInput(void)
+void MainWindow::onInputFolderOpen(void)
 {
 	QDesktopServices::openUrl(QUrl("file:///" + m_check_manager->Folder(), QUrl::TolerantMode));
 }
 
-void MainWindow::onOpenBad(void)
+void MainWindow::onBadFolderOpen(void)
 {
 	QDesktopServices::openUrl(QUrl("file:///" + m_bad_manager->Folder(), QUrl::TolerantMode));
 }
 
-void MainWindow::onChooseInputFolder(void)
+void MainWindow::onBadFolderCmd(void)
+{
+	new ShellProcess(m_bad_manager->Folder());
+}
+
+void MainWindow::onOutputMibFolderCmd(void)
+{
+	new ShellProcess(Conf::OutputMibFolder());
+}
+
+void MainWindow::onOutputHtmlFolderCmd(void)
+{
+	new ShellProcess(Conf::OutputHtmlFolder());
+}
+
+void MainWindow::onOutputDefFolderCmd(void)
+{
+	new ShellProcess(Conf::OutputDefFolder());
+}
+
+void MainWindow::onOutputIncFolderCmd(void)
+{
+	new ShellProcess(Conf::OutputIncFolder());
+}
+
+void MainWindow::onInputFolderCmd(void)
+{
+	new ShellProcess(m_check_manager->Folder());
+}
+
+void MainWindow::onInputFolderChoose(void)
 {
 	QString folder = QFileDialog::getExistingDirectory(this,
 																		"Choose input folder",
@@ -306,14 +354,14 @@ void MainWindow::onChooseInputFolder(void)
 	if(folder.length() == 0)
 		return;
 	Conf::InputFolder(folder);
-	ui->MibFileCheckFolderEdit->setText(Conf::InputFolder());
-	m_check_manager->Set(ui->MibFileCheckFolderEdit->text(),
+	ui->InputFolderEdit->setText(Conf::InputFolder());
+	m_check_manager->Set(ui->InputFolderEdit->text(),
 								ui->MibFileCheckList,
 								ui->MibFileCheckLabel);
 	onReload();
 }
 
-void MainWindow::onChooseBadFolder(void)
+void MainWindow::onBadFolderChoose(void)
 {
 	QString folder = QFileDialog::getExistingDirectory(this,
 																		"Choose bad folder",
@@ -322,14 +370,14 @@ void MainWindow::onChooseBadFolder(void)
 	if(folder.length() == 0)
 		return;
 	Conf::BadFolder(folder);
-	ui->MibFileBadFolderEdit->setText(Conf::BadFolder());
-	m_bad_manager->Set(ui->MibFileBadFolderEdit->text(),
+	ui->BadFolderEdit->setText(Conf::BadFolder());
+	m_bad_manager->Set(ui->BadFolderEdit->text(),
 							 ui->MibFileBadList,
 							 ui->MibFileBadLabel);
 	onReload();
 }
 
-void MainWindow::onDefFolderChooser(void)
+void MainWindow::onOutputDefFolderChooser(void)
 {
 	QString folder = QFileDialog::getExistingDirectory(this,
 																		"Choose Def folder",
@@ -338,10 +386,22 @@ void MainWindow::onDefFolderChooser(void)
 	if(folder.length() == 0)
 		return;
 	Conf::OutputDefFolder(folder);
-	ui->MibFileDefFolderEdit->setText(Conf::OutputDefFolder());
+	ui->OutputDefFolderEdit->setText(Conf::OutputDefFolder());
 }
 
-void MainWindow::onMibFolderChooser(void)
+void MainWindow::onOutputIncFolderChooser(void)
+{
+	QString folder = QFileDialog::getExistingDirectory(this,
+																		"Choose Inc folder",
+																		Conf::OutputIncFolder(),
+																		QFileDialog::ShowDirsOnly);
+	if(folder.length() == 0)
+		return;
+	Conf::OutputIncFolder(folder);
+	ui->OutputIncFolderEdit->setText(Conf::OutputIncFolder());
+}
+
+void MainWindow::onOutputMibFolderChooser(void)
 {
 	QString folder = QFileDialog::getExistingDirectory(this,
 																		"Choose Mib folder",
@@ -350,10 +410,10 @@ void MainWindow::onMibFolderChooser(void)
 	if(folder.length() == 0)
 		return;
 	Conf::OutputMibFolder(folder);
-	ui->MibFileMibFolderEdit->setText(Conf::OutputMibFolder());
+	ui->OutputMibFolderEdit->setText(Conf::OutputMibFolder());
 }
 
-void MainWindow::onHtmlFolderChooser(void)
+void MainWindow::onOutputHtmlFolderChooser(void)
 {
 	QString folder = QFileDialog::getExistingDirectory(this,
 																		"Choose Html folder",
@@ -362,20 +422,25 @@ void MainWindow::onHtmlFolderChooser(void)
 	if(folder.length() == 0)
 		return;
 	Conf::OutputHtmlFolder(folder);
-	ui->MibFileHtmlFolderEdit->setText(Conf::OutputHtmlFolder());
+	ui->OutputHtmlFolderEdit->setText(Conf::OutputHtmlFolder());
 }
 
-void MainWindow::onDefFolderOpen(void)
+void MainWindow::onOutputDefFolderOpen(void)
 {
 	QDesktopServices::openUrl(QUrl("file:///" + Conf::OutputDefFolder(), QUrl::TolerantMode));
 }
 
-void MainWindow::onMibFolderOpen(void)
+void MainWindow::onOutputIncFolderOpen(void)
+{
+	QDesktopServices::openUrl(QUrl("file:///" + Conf::OutputIncFolder(), QUrl::TolerantMode));
+}
+
+void MainWindow::onOutputMibFolderOpen(void)
 {
 	QDesktopServices::openUrl(QUrl("file:///" + Conf::OutputMibFolder(), QUrl::TolerantMode));
 }
 
-void MainWindow::onHtmlFolderOpen(void)
+void MainWindow::onOutputHtmlFolderOpen(void)
 {
 	QDesktopServices::openUrl(QUrl("file:///" + Conf::OutputHtmlFolder(), QUrl::TolerantMode));
 }

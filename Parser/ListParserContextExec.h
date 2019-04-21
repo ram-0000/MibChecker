@@ -11,7 +11,7 @@ public:
 	ListParserContextExec(ParserItem * entry);
 	~ListParserContextExec(void);
 
-	inline size_t size(void) const { return m_list.size(); }
+	inline int size(void) const { return m_list.size(); }
 
 	ParserContextExec & Current(void);
 	void CurrentRemove(void);

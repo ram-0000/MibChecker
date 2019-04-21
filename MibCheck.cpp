@@ -3,6 +3,7 @@
 #include "Conf.h"
 #include <QDir>
 #include <QDateTime>
+#include "AsciiFile.h"
 
 // TODO : refaire le greedy
 
@@ -25,7 +26,16 @@ void MibCheck::_check(OverwriteAlgorithm Algo, const QString & File)
 	input_mib = folder_manager.InputMibFileName();
 
 	// remove read only flag (if set)
-	QFile::setPermissions(input_mib, QFile::ReadOther | QFile::WriteOther);
+	QFile::setPermissions(input_mib,
+									QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner
+								 | QFile::ReadUser | QFile::WriteUser | QFile::ExeUser
+								 | QFile::ReadGroup | QFile::WriteGroup | QFile::ExeGroup
+								 | QFile::ReadOther | QFile::WriteOther | QFile::ExeOther);
+
+	// check if file is ASCII
+	AsciiFile af(input_mib);
+	if(af.Check() == false)
+		return;
 
 	// check if overwrite is possible
 	_check_overwrite(Algo, input_mib, output_mib);
@@ -35,7 +45,7 @@ void MibCheck::_check(OverwriteAlgorithm Algo, const QString & File)
 	m_mib_tree.Load(folder_manager2, m_mib_filename);
 	//m_mib_tree.Dump();
 
-	// check if files muts be generated
+	// check if files must be generated
 	if(Algo == CheckOnly)
 		return;
 
@@ -44,6 +54,11 @@ void MibCheck::_check(OverwriteAlgorithm Algo, const QString & File)
 
 	// build full mib file name
 	QDir dir;
+
+	// generate included files
+	if(dir.mkpath(folder_manager.OutputIncFolder()) == false)
+		throw ParserExceptionCreateFolder(folder_manager.OutputIncFolder());
+	_inc();
 
 	// generate def files
 	if(dir.mkpath(folder_manager.OutputDefFolder()) == false)
@@ -127,6 +142,55 @@ void MibCheck::_remediate(const ParserException & e)
 	}
 }
 
+void MibCheck::_inc(void)
+{
+	for(const auto & type : m_mib_tree.m_global_types)
+	{
+		// skip entry if file is selected by user
+		if(type.isUserChoice() == false)
+			_create_inc_file(type.MibModule());
+	}
+
+	for(const auto & value : m_mib_tree.m_global_values)
+	{
+		// skip entry if file is selected by user
+		if(value.isUserChoice() == false)
+			_create_inc_file(value.MibModule());
+	}
+}
+
+void MibCheck::_create_inc_file(const QString & module)
+{
+	// some times, module may be empty
+	if(module.length() == 0)
+		return;
+
+	// build path name
+	QString path = Conf::OutputIncFolder();
+	path += "/";
+	path += module[0];
+	path += "/";
+	path += module;
+	path += Conf::IncExtension();
+
+	// create file
+	if(QFile::exists(path) == false)
+	{
+		DEBUG("Creating included file %s", path.toLatin1().constData());
+		QFile file(path);
+		file.open(QIODevice::WriteOnly | QIODevice::Truncate);
+		file.close();
+
+		// check that file is created
+		if(QFile::exists(path) == false)
+			WARNING("Unable to create file %s", path.toLatin1().constData());
+	}
+	else
+	{
+		//DEBUG("Included file %s is already existing", path.toLatin1().constData());
+	}
+}
+
 void MibCheck::_def(const QString & Name)
 {
 	// create filename
@@ -162,7 +226,7 @@ void MibCheck::_def(const QString & Name)
 		if(first == true) s << "\n";
 
 		// write something like this "38:necProductDepend:1.3.6.1.4.1.119.2.3"
-		s << value.MibLine() << ":" << value.getName() << ":" << value.m_oid.toString();
+		s << value.MibLine() << ":" << value.Name() << ":" << value.m_oid.toString();
 		first = true;
 	}
 
@@ -213,7 +277,13 @@ void MibCheck::_html(const QString & Name)
 		_print(s, "$table=array();");
 		int idx = 0;
 		_print_type(s, type, 0, idx);
-		_print(s, "body_defined_oid($id++, \"\", \"", m_mib_filename + "::" + type.Name(), "\", \"\", $table);", "\n");
+		_print(s,
+				 "body_defined_oid($id++, \"\", \"",
+				 m_mib_filename + "::" + type.Name(),
+				 "\", \"",
+				 type.Description(),
+				 "\", $table);",
+				 "\n");
 	}
 
 	// defined values
@@ -223,14 +293,17 @@ void MibCheck::_html(const QString & Name)
 		if(value.isUserChoice() == false)
 			continue;
 
-		// check if it is a real oid and not a simple value
-		if(value.m_oid.isOidValue() == false)
-			continue;
-
 		_print(s, "$table=array();");
 		int idx = 0;
 		_print_type(s, value.m_type, 0, idx);
-		_print(s, "body_defined_oid($id++, \"", value.m_oid.toString(), "\", \"", m_mib_filename + "::" + value.getName(), "\", \"", value.getDescription(), "\", $table);", "\n");
+		_print(s, "body_defined_oid($id++, \"",
+				 value.m_oid.toString(),
+				 "\", \"",
+				 m_mib_filename + "::" + value.Name(),
+				 "\", \"",
+				 value.m_type.Description(),
+				 "\", $table);",
+				 "\n");
 	}
 	_print(s, "body_write_end();", "\n");
 	_print(s, "printf(\"</html>\\n\");", "\n");
@@ -259,8 +332,8 @@ void MibCheck::_print_type(QTextStream & s,
 	_print(s, "$table[", QString::number(idx), "]['Name']=\"", str, "\";");
 
 	// do not write constraint if empty
-	if(type.ConstraintStr().isEmpty() == false)
-		_print(s, "$table[", QString::number(idx), "]['Constraint']=\"", type.ConstraintStr(), "\";");
+	if(type.getTypeExtended().isEmpty() == false)
+		_print(s, "$table[", QString::number(idx), "]['Constraint']=\"", type.getTypeExtended(), "\";");
 
 	// do not write name when indent is 0 because it is already written
 	QString name = "";

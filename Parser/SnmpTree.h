@@ -82,7 +82,7 @@ private:
 	inline void On_realType(int, ParserValue &) { m_tmp_type_ptr->setTypeReal(); }
 	inline void On_integerType(int, ParserValue &) { m_tmp_type_ptr->setTypeInteger(); }
 	inline void On_objectIdentifierType(int, ParserValue &) { m_tmp_type_ptr->setTypeObjectIdentifier(); }
-	inline void On_stringType(int, ParserValue &) { m_tmp_type_ptr->setTypeString(); }
+	inline void On_stringType(int, ParserValue &) { m_tmp_type_ptr->setTypeOctetString(); }
 	inline void On_bitStringType(int, ParserValue &) { m_tmp_type_ptr->setTypeBitString(); }
 	inline void On_bitsType(int, ParserValue &) { m_tmp_type_ptr->setTypeBits(); }
 	inline void On_sequenceType(int, ParserValue &) { m_tmp_type_ptr->setTypeSequence(); }
@@ -98,27 +98,29 @@ private:
 	inline void On_macroObjectIdentity(int, ParserValue &) { m_tmp_type_ptr->setTypeMacroObjectIdentity(); }
 	inline void On_macroObjectType(int, ParserValue &) { m_tmp_type_ptr->setTypeMacroObjectType(); }
 	inline void On_macroNotificationType(int, ParserValue &) { m_tmp_type_ptr->setTypeMacroNotificationType(); }
-	inline void On_macroTrapType(int, ParserValue &) { m_tmp_type_ptr->setTypeMacroTrapType(); }
 	inline void On_macroTextualConvention(int, ParserValue &) { m_tmp_type_ptr->setTypeMacroTextualConvention(); }
 	inline void On_macroObjectGroup(int, ParserValue &) { m_tmp_type_ptr->setTypeMacroObjectGroup(); }
 	inline void On_macroNotificationGroup(int, ParserValue &) { m_tmp_type_ptr->setTypeMacroNotificationGroup(); }
-	inline void On_macroModuleCompliance(int, ParserValue &) { m_tmp_type_ptr->setTypeMacroModuleCompliance(); }
-	inline void On_macroAgentCapabilities(int, ParserValue &) { m_tmp_type_ptr->setTypeMacroAgentCapabilities(); }
+	void On_macroModuleCompliance(int order, ParserValue & Value);
+	void On_macroAgentCapabilities(int order, ParserValue & Value);
+	inline void On_macroTrapType(int, ParserValue &) { m_tmp_type_ptr->setTypeMacroTrapType(); }
+	void On_macroModuleConformance(int order, ParserValue & Value);
 
 	inline void On_nameOrNumber1(int, ParserValue & Value) { m_tmp_value.m_oid.add(Value.get().toInt()); }
 	inline void On_nameOrNumber2(int, ParserValue & Value) { m_tmp_value.m_oid.add(Value.get()); }
 	inline void On_nameAndNumber1(int, ParserValue & Value) { m_tmp_value.m_oid.set(Value.get().toInt()); }
 	inline void On_nameAndNumber2(int, ParserValue & Value) { m_tmp_value.m_oid.set(Value.get()); }
 
-	inline void On_snmpDescrPart(int, ParserValue & Value) { m_tmp_value.setDescription(Value.get()); }
-	inline void On_snmpStatusPart(int, ParserValue & Value) { m_tmp_value.setStatus(Value.get()); }
-	inline void On_snmpAccessPart(int, ParserValue & Value) { m_tmp_value.setAccess(Value.get()); }
+	inline void On_snmpDescription(int, ParserValue & Value) { m_tmp_type_ptr->Description(Value.get()); }
+	inline void On_snmpStatus(int, ParserValue & /*Value*/) { m_tmp_value.m_status.Set(m_tmp_name); }
+	inline void On_snmpAccess(int, ParserValue & /*Value*/) { m_tmp_value.m_access.Set(m_tmp_name); }
 
 	void On_type1(int order, ParserValue & Value);
 	void On_namedNumber(int order, ParserValue & Value);
+	void On_numberValue(int order, ParserValue & Value);
 	void On_constraint(int order, ParserValue & Value);
-	inline void On_lowerEndPoint(int, ParserValue & Value) { m_tmp_type_ptr->add_type_extended(Value.get()); }
-	inline void On_upperEndPoint(int, ParserValue & Value) { m_tmp_type_ptr->add_type_extended(".."); m_tmp_type_ptr->add_type_extended(Value.get()); }
+	inline void On_lowerEndPoint(int, ParserValue & Value) { m_tmp_type_ptr->addTypeExtended(Value.get()); }
+	inline void On_upperEndPoint(int, ParserValue & Value) { m_tmp_type_ptr->addTypeExtended(".."); m_tmp_type_ptr->addTypeExtended(Value.get()); }
 	void On_sizeConstraint(int order, ParserValue & Value);
 
 	void On_valueAssignment(int order, ParserValue & Value);

@@ -26,6 +26,7 @@ void SnmpTree::clear(void)
 
 	m_global_types.clear();
 	m_module_types.clear();
+	m_tmp_type.Unlock();
 	m_tmp_type.clear();
 	m_tmp_type_ptr = nullptr;
 	m_tmp_name.clear();
@@ -66,9 +67,6 @@ void SnmpTree::Dump(void) const
 	DEBUG("Defined values");
 	for(const auto & item : m_global_values)
 	{
-		// only dump OID values
-//		if(item.m_type.isTypeObjectIdentifier() == false)
-//			continue;
 		if(item.isUserChoice() == true)
 			item.Dump(1);
 	}
@@ -162,7 +160,6 @@ SnmpTree::Jump_t SnmpTree::m_tbl_jump[] =
 	{ "nameOrNumber2", &SnmpTree::On_nameOrNumber2 },
 	{ "nameAndNumber1", &SnmpTree::On_nameAndNumber1 },
 	{ "nameAndNumber2", &SnmpTree::On_nameAndNumber2 },
-	{ "nameAndNumber2", &SnmpTree::On_nameAndNumber2 },
 
 	{ "macroModuleIdentity", &SnmpTree::On_macroModuleIdentity },
 	{ "macroObjectIdentity", &SnmpTree::On_macroObjectIdentity },
@@ -173,13 +170,15 @@ SnmpTree::Jump_t SnmpTree::m_tbl_jump[] =
 	{ "macroObjectGroup", &SnmpTree::On_macroObjectGroup },
 	{ "macroNotificationGroup", &SnmpTree::On_macroNotificationGroup },
 	{ "macroModuleCompliance", &SnmpTree::On_macroModuleCompliance },
+	{ "macroModuleConformance", &SnmpTree::On_macroModuleConformance },
 	{ "macroAgentCapabilities", &SnmpTree::On_macroAgentCapabilities },
 
-	{ "snmpDescrPart", &SnmpTree::On_snmpDescrPart },
-	{ "snmpStatusPart", &SnmpTree::On_snmpStatusPart },
-	{ "snmpAccessPart", &SnmpTree::On_snmpAccessPart },
+	{ "snmpDescription", &SnmpTree::On_snmpDescription },
+	{ "snmpStatus", &SnmpTree::On_snmpStatus },
+	{ "snmpAccess", &SnmpTree::On_snmpAccess },
 
 	{ "namedNumber", &SnmpTree::On_namedNumber },
+	{ "numberValue", &SnmpTree::On_numberValue },
 	{ "lowerEndPoint", &SnmpTree::On_lowerEndPoint },
 	{ "upperEndPoint", &SnmpTree::On_upperEndPoint },
 	{ "typeAssignment", &SnmpTree::On_typeAssignment },
@@ -197,7 +196,7 @@ void SnmpTree::OnAction(int MibLine,
 	// store mibfile and mibline
 	m_mib_line = MibLine;
 
-	//DEBUG("%s - %d ==> '%s'", rule, order, Value.get().toLatin1().constData());
+	//DEBUG("DEBUG Parsing: OnAction %s(%d) ==> '%s'", rule, order, Value.get().toLatin1().constData());
 	for(int boucle = 0; boucle != sizeof(m_tbl_jump) / sizeof(m_tbl_jump[0]); boucle++)
 	{
 		if(strcmp(rule, m_tbl_jump[boucle].name) != 0)
@@ -238,28 +237,28 @@ void SnmpTree::On_symbol(int, ParserValue & Value)
 
 void SnmpTree::On_constraint(int, ParserValue &)
 {
-	if(m_tmp_type_ptr->is_type_extended_empty() == false)
-		m_tmp_type_ptr->add_type_extended(" | ");
+	if(m_tmp_type_ptr->getTypeExtended().isEmpty() == false)
+		m_tmp_type_ptr->addTypeExtended(" | ");
 }
 
 void SnmpTree::On_namedNumber(int order, ParserValue & Value)
 {
 	if(order == 1)
 	{
-		if(m_tmp_type_ptr->is_type_extended_empty() == false)
-			m_tmp_type_ptr->add_type_extended(", ");
-		m_tmp_type_ptr->add_type_extended(Value.get());
+		if(m_tmp_type_ptr->getTypeExtended().isEmpty() == false)
+			m_tmp_type_ptr->addTypeExtended(", ");
+		m_tmp_type_ptr->addTypeExtended(Value.get());
 
 		// add an integer value
 		m_tmp_integer_value.clear();
-		m_tmp_integer_value.setName(Value.get());
+		m_tmp_integer_value.NameAndClear(m_tmp_name);
 		m_tmp_integer_value.m_type.setTypeInteger();
 	}
 	else if(order == 2)
 	{
-		m_tmp_type_ptr->add_type_extended("(");
-		m_tmp_type_ptr->add_type_extended(Value.get());
-		m_tmp_type_ptr->add_type_extended(")");
+		m_tmp_type_ptr->addTypeExtended("(");
+		m_tmp_type_ptr->addTypeExtended(Value.get());
+		m_tmp_type_ptr->addTypeExtended(")");
 
 		// complete integer value
 		m_tmp_integer_value.m_oid.add(Value.get().toInt());
@@ -268,19 +267,46 @@ void SnmpTree::On_namedNumber(int order, ParserValue & Value)
 	}
 }
 
-void SnmpTree::On_type1(int order, ParserValue &)
+void SnmpTree::On_numberValue(int order, ParserValue & Value)
 {
-	if(order == 1) m_type_level++;
-	else if(order == 2) m_type_level--;
-	else throw ParserExceptionShouldNotArrive(__FILE__, __LINE__);
+	if( (order == 1) && (m_tmp_type.isMacroTrapType() == true) )
+	{
+		// set value for the trap
+		int val = Value.get().toInt();
+		//DEBUG("Value %d for trap '%s'", val, m_tmp_value.getName().toLatin1().constData());
+		m_tmp_value.m_oid.add(val);
+	}
+}
 
-	//DEBUG("Type Order=%d, Level=%d", order, m_type_level);
+void SnmpTree::On_type1(int order, ParserValue & /*Value*/)
+{
+	if(order == 1)
+	{
+		// first call is the init of the type
+		m_type_level++;
+	}
+	else if(order == 2)
+	{
+		// second call is the close of the type
+		m_type_level--;
+	}
+	else
+	{
+		// not possible
+		throw ParserExceptionShouldNotArrive(__FILE__, __LINE__);
+	}
+
+	// some debug message
+	//DEBUG("On_Type1(): Level %d, order=%d, Line=%d, value=%s", m_type_level, order, m_mib_line, Value.get().toLatin1().constData());
+
 	if(m_type_level == 0)
 	{
+		// level = 0 is uniquely possible when closing the type
 		if(order == 1)
 			throw ParserExceptionShouldNotArrive(__FILE__, __LINE__);
-		else
-			m_tmp_type_ptr = nullptr;
+
+		// reset pointer
+		m_tmp_type_ptr = nullptr;
 		return;
 	}
 
@@ -332,8 +358,9 @@ void SnmpTree::On_type1(int order, ParserValue &)
 	throw ParserExceptionShouldNotArrive(__FILE__, __LINE__);
 }
 
-void SnmpTree::On_typeAssignment(int, ParserValue &)
+void SnmpTree::On_typeAssignment(int /*order*/, ParserValue & /*Value*/)
 {
+	//DEBUG("On_typeAssignment(): Line %d, order=%d, Level=%d, value=%s", m_mib_line, order, m_type_level, Value.get().toLatin1().constData());
 	//m_tmp_type.Dump(0);
 
 	m_tmp_type.UserChoice(m_is_user_choice);
@@ -341,12 +368,14 @@ void SnmpTree::On_typeAssignment(int, ParserValue &)
 	m_tmp_type.clear();
 }
 
-void SnmpTree::On_valueAssignment(int order, ParserValue &)
+void SnmpTree::On_valueAssignment(int order, ParserValue & /*Value*/)
 {
+	//DEBUG("On_valueAssignment(): Line %d, order=%d, Level=%d, value=%s", m_mib_line, order, m_type_level, Value.get().toLatin1().constData());
+
 	if(order == 1)
 	{
 		m_tmp_value.clear();
-		m_tmp_value.Name(m_tmp_name);
+		m_tmp_value.NameAndClear(m_tmp_name);
 		m_tmp_value.MibLine(m_mib_line);
 		m_tmp_value.MibModule(m_mib_filename);
 	}
@@ -362,9 +391,9 @@ void SnmpTree::On_valueAssignment(int order, ParserValue &)
 void SnmpTree::On_sizeConstraint(int order, ParserValue &)
 {
 	if(order == 1)
-		m_tmp_type_ptr->add_type_extended("Size(");
+		m_tmp_type_ptr->addTypeExtended("Size(");
 	else if(order == 2)
-		m_tmp_type_ptr->add_type_extended(")");
+		m_tmp_type_ptr->addTypeExtended(")");
 }
 
 void SnmpTree::_check_values(const QVector<SnmpValue> & values,
@@ -424,7 +453,7 @@ void SnmpTree::_check_type(const QVector<SnmpType> & types,
 			if(_check_type_name(types, defined) == false)
 				throw ParserExceptionSnmpTypeNotFound(defined, type.MibModule(), type.MibLine());
 		}
-		else if(defined != SnmpType::NameMacroType())
+		else if(defined != StringMatch::SnmpTypeTranslate(SnmpType::TypeMacroObjectType))
 		{
 			if(_check_type_name(types, defined) == false)
 				throw ParserExceptionSnmpTypeNotFound(defined, type.MibModule(), type.MibLine());
@@ -466,7 +495,7 @@ bool SnmpTree::_check_value_name(const QVector<SnmpValue> & values, const QStrin
 	// check with names in module types
 	for(const auto & value : values)
 	{
-		if(value.getName() == name)
+		if(value.Name() == name)
 			return true;
 	}
 
@@ -520,10 +549,58 @@ const SnmpOid & SnmpTree::_get_oid_by_name(const QVector<SnmpValue> & values, co
 {
 	for(const auto & value : values)
 	{
-		if(value.getName() == name)
+		if(value.Name() == name)
 			return value.m_oid;
 	}
 
 	// not found
 	throw ParserExceptionSnmpValueNotFound(name);
+}
+
+void SnmpTree::On_macroModuleCompliance(int order, ParserValue & /*Value*/)
+{
+	if(order == 1)
+	{
+		m_tmp_type_ptr->setTypeMacroModuleCompliance();
+	}
+	else if(order == 2)
+	{
+		m_tmp_type_ptr->Lock();
+	}
+	else if(order == 3)
+	{
+		m_tmp_type_ptr->Unlock();
+	}
+}
+
+void SnmpTree::On_macroAgentCapabilities(int order, ParserValue & /*Value*/)
+{
+	if(order == 1)
+	{
+		m_tmp_type_ptr->setTypeMacroAgentCapabilities();
+	}
+	else if(order == 2)
+	{
+		m_tmp_type_ptr->Lock();
+	}
+	else if(order == 3)
+	{
+		m_tmp_type_ptr->Unlock();
+	}
+}
+
+inline void SnmpTree::On_macroModuleConformance(int order, ParserValue & /*Value*/)
+{
+	if(order == 1)
+	{
+		m_tmp_type_ptr->setTypeMacroModuleConformance();
+	}
+	else if(order == 2)
+	{
+		m_tmp_type_ptr->Lock();
+	}
+	else if(order == 3)
+	{
+		m_tmp_type_ptr->Unlock();
+	}
 }

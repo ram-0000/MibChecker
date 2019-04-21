@@ -1,14 +1,19 @@
 #include "SnmpType.h"
 #include "ParserException.h"
 #include "Debug.h"
+#include "StringMatch.h"
 
 SnmpType::SnmpType(void)
 {
+	m_lock = false;
 	clear();
 }
 
 void SnmpType::clear(void)
 {
+	if(isLocked() == true)
+		return;
+
 	m_name.clear();
 	m_type = TypeNotSet;
 	m_type_name.clear();
@@ -16,7 +21,96 @@ void SnmpType::clear(void)
 	m_compound.clear();
 	m_mib_module.clear();
 	m_mib_line = -1;
+	m_user_choice = false;
+	Description("", true);
 }
+
+void SnmpType::Name(QString & val)
+{
+	if(isLocked() == true)
+		return;
+
+	m_name = val;
+	val.clear();
+}
+
+void SnmpType::MibModule(const QString & val)
+{
+	if(isLocked() == true)
+		return;
+
+	m_mib_module = val;
+}
+
+void SnmpType::MibLine(int val)
+{
+	if(isLocked() == true)
+		return;
+
+	m_mib_line = val;
+}
+
+void SnmpType::Description(const QString & str, bool override /*= false*/)
+{
+	if(isLocked() == true)
+		return;
+
+	if( (override == true) || (Description().length() == 0) )
+		m_description = str;
+}
+
+void SnmpType::setType(SnmpType & type)
+{
+	if(isLocked() == true)
+		return;
+
+	//	DEBUG("Setting type");
+	*this = type;
+	type.clear();
+}
+
+void SnmpType::UserChoice(bool user_choice)
+{
+	if(isLocked() == true)
+		return;
+
+	m_user_choice = user_choice;
+}
+
+void SnmpType::addTypeExtended(const QString & str)
+{
+	if(isLocked() == true)
+		return;
+
+	//DEBUG("Adding extended");
+	m_type_extended += str;
+}
+
+SnmpType & SnmpType::addCompound(void)
+{
+	if(isLocked() == true)
+		return *this;
+
+	//DEBUG("Adding compound");
+	m_compound.push_back(SnmpType());
+	return lastCompound();
+}
+
+SnmpType & SnmpType::lastCompound(void)
+{
+	if(m_compound.size() == 0)
+		throw ParserExceptionShouldNotArrive(__FILE__, __LINE__);
+	return m_compound.back();
+}
+
+void SnmpType::set(BaseType_t type, const QString & name /*= ""*/)
+{
+	if(isLocked() == true)
+		return ;
+	m_type = type;
+	m_type_name = name;
+}
+
 
 void SnmpType::Dump(int level) const
 {
@@ -24,14 +118,14 @@ void SnmpType::Dump(int level) const
 	QString str;
 
 	// name if exist
-	if(m_name.length() != 0)
+	if(Name().length() != 0)
 	{
 		str += Name();
 		str+= ": ";
 	}
 
 	// type itself
-	str += type_str(m_type);
+	str += StringMatch::SnmpTypeTranslate(m_type);
 	if(m_type_name.length() != 0)
 	{
 		str += "=";
@@ -45,6 +139,14 @@ void SnmpType::Dump(int level) const
 		str += m_type_extended;
 	}
 
+	// Description if exist
+	if(Description().length() != 0)
+	{
+		str += " Descr='";
+		str += Description();
+		str+= "'";
+	}
+
 	DEBUG("%s%s(%d) ==> %s",
 			indent.toLatin1().constData(),
 			MibModule().toLatin1().constData(),
@@ -56,74 +158,3 @@ void SnmpType::Dump(int level) const
 		m_compound[boucle].Dump(level + 1);
 }
 
-void SnmpType::addCompound(SnmpType & type)
-{
-	m_compound.push_back(type);
-	type.clear();
-}
-
-const char * SnmpType::type_str(BaseType_t type)
-{
-	if(type == TypeDefined) return "Defined";
-	if(type == TypeNull) return "NULL";
-	if(type == TypeBoolean) return "BOOLEAN";
-	if(type == TypeReal) return "REAL";
-	if(type == TypeInteger) return "INTEGER";
-	if(type == TypeObjectIdentifier) return "OBJECT IDENTIFIER";
-	if(type == TypeString) return "STRING";
-	if(type == TypeBitString) return "BIT STRING";
-	if(type == TypeBits) return "BITS";
-	if(type == TypeSequence) return "SEQUENCE";
-	if(type == TypeSequenceOf) return "SEQUENCE OF";
-	if(type == TypeSet) return "SET";
-	if(type == TypeSetOf) return "SET OF";
-	if(type == TypeChoice) return "CHOICE";
-	if(type == TypeEnumerated) return "ENUMERATED";
-	if(type == TypeSelection) return "SELECTION";
-	if(type == TypeAny) return "ANY";
-	if(type == TypeMacroModuleIdentity) return "MODULE-IDENTITY";
-	if(type == TypeMacroObjectIdentity) return "OBJECT-IDENTITY";
-	if(type == TypeMacroObjectType) return "OBJECT-TYPE";
-	if(type == TypeMacroNotificationType) return "NOTIFICATION-TYPE";
-	if(type == TypeMacroTrapType) return "TRAP-TYPE";
-	if(type == TypeMacroTextualConvention) return "TEXTUAL-CONVENTION";
-	if(type == TypeMacroObjectGroup) return "OBJECT-GROUP";
-	if(type == TypeMacroNotificationGroup) return "NOTIFICATION-GROUP";
-	if(type == TypeMacroModuleCompliance) return "MODULE-COMPLIANCE";
-	if(type == TypeMacroAgentCapabilities) return "AGENT-CAPABILITIES";
-	throw ParserExceptionShouldNotArrive(__FILE__, __LINE__);
-}
-
-bool SnmpType::is_macro(BaseType_t type)
-{
-	if(type == TypeMacroModuleIdentity) return true;
-	if(type == TypeMacroObjectIdentity) return true;
-	if(type == TypeMacroObjectType) return true;
-	if(type == TypeMacroNotificationType) return true;
-	if(type == TypeMacroTrapType) return true;
-	if(type == TypeMacroTextualConvention) return true;
-	if(type == TypeMacroObjectGroup) return true;
-	if(type == TypeMacroNotificationGroup) return true;
-	if(type == TypeMacroModuleCompliance) return true;
-	if(type == TypeMacroAgentCapabilities) return true;
-	return false;
-}
-
-void SnmpType::setType(SnmpType & type)
-{
-	*this = type;
-	type.clear();
-}
-
-SnmpType & SnmpType::addCompound(void)
-{
-	m_compound.push_back(SnmpType());
-	return lastCompound();
-}
-
-SnmpType & SnmpType::lastCompound(void)
-{
-	if(m_compound.size() == 0)
-		throw ParserExceptionShouldNotArrive(__FILE__, __LINE__);
-	return m_compound.back();
-}

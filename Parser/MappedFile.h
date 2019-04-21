@@ -9,7 +9,7 @@
 class MappedFile
 {
 public:
-	MappedFile(const QString & name) throw (ParserException);
+	MappedFile(const QString & name);
 	~MappedFile(void);
 
 	inline bool IsOpen(void) const { return m_file.isOpen(); }
@@ -30,7 +30,6 @@ public:
 	char ReadCharacter(void);
 	QString ReadUntil(const char *until);
 	inline char Carac(void) const { return *m_current; }
-
 
 private:
 

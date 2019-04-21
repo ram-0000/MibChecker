@@ -9,7 +9,7 @@
 // define classical 'lists'
 class ParserItem;
 typedef QLinkedList<ParserItem *> ParserItemList;
-typedef QMap<const char *, ParserItem *> ParserItemMap;
+typedef QMap<QString, ParserItem *> ParserItemMap;
 
 class ParserItem
 {
@@ -20,7 +20,7 @@ public:
 						TypePoint,		// item is an arrival point for Branch items
 						TypeBegin,		// item is start of a sub routine
 						TypeEnd,			// item is end of a sub routine
-						TypeSub,		// item is a call to sub routine (m_value_string is valid)
+						TypeSub,			// item is a call to sub routine (m_value_string is valid)
 						TypeCallback,	// item is a callback function
 					 } ParserItemType_t;
 
@@ -28,16 +28,17 @@ public:
 	~ParserItem(void);
 
 	// a unique identifier
-	int Id(void) const throw (ParserException);
+	int Id(void) const;
 
 	// the next item (or nullptr if last item)
-	ParserItem * Next(void) const throw (ParserException);
+	ParserItem * Next(void) const;
 
 	// Update some value in the structure
-	void Finalize(int id, ParserItem * next) throw (ParserException);
+	void Finalize(int id, ParserItem * next);
 
 	// rule name where comes from the item
 	inline const char * Rule(void) const { return m_rule; }
+	inline static const char * Root(void) { return "root"; }
 
 	// to handle type of item
 	inline ParserItemType_t Type(void) const { return m_type; }
@@ -53,22 +54,24 @@ public:
 	inline bool isCallback(void) const { return Type() == TypeCallback; }
 
 	// to handle token
-	void Token(int token) throw (ParserException);
-	int Token(void) const throw (ParserException);
+	void Token(int token);
+	int Token(void) const;
 
 	// to handle subroutine name
-	void Sub(const char * sub) throw (ParserException);
-	const char * Sub(void) const throw (ParserException);
+	void Sub(const char * sub);
+	const char * Sub(void) const;
 
 	// to handle jump table
-	void Jump(ParserItem * jump) throw (ParserException);
-	const ParserItemList & Jump(void) const throw (ParserException);
+	void Jump(ParserItem * jump);
+	const ParserItemList & Jump(void) const;
 
 	// to handle callback exec feature
 	void Callback(ParserAction * callback, int Order);
 	inline ParserAction * Callback(int & order) const { order = m_callback_order; return m_callback_fct; }
 
 	void Dump(void) const;
+
+	inline bool isRoot(void) const { return strcmp(Rule(), Root()) == 0; }
 
 private:
 	ParserItemType_t m_type;

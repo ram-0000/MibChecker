@@ -71,7 +71,12 @@ SOURCES += main.cpp \
 	 MibCheck.cpp \
 	 ErrorDisplay.cpp \
 	 Parser/SnmpImportManager.cpp \
-	 MibCheckerThread.cpp
+	 MibCheckerThread.cpp \
+    AsciiFile.cpp \
+    ShellProcess.cpp \
+    Parser/StringMatch.cpp \
+    Parser/SnmpStatus.cpp \
+    Parser/SnmpAccess.cpp
 
 FORMS += \
 	 MainWindow.ui \
@@ -120,7 +125,12 @@ HEADERS += \
 	 MibCheck.h \
 	 ErrorDisplay.h \
 	 Parser/SnmpImportManager.h \
-	 MibCheckerThread.h
+	 MibCheckerThread.h \
+    AsciiFile.h \
+    ShellProcess.h \
+    Parser/StringMatch.h \
+    Parser/SnmpStatus.h \
+    Parser/SnmpAccess.h
 
 DISTFILES += \
 	 Grammar/asn1.grammar \

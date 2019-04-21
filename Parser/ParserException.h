@@ -9,10 +9,14 @@ public:
 	static void CheckNull(const void * Pointer);
 	static void CheckNullOrEmpty(const void * Pointer);
 
-	typedef enum { NullPointer, EmptyString, FindMibFile, FileWithBom, EmptyFile, OpenFile, MemoryMapping, QuotedString, NotLL1,
-						SyntaxError, SymbolNotFound, ShouldNotArrive, PopEmptyStack, CallbackNotFound,
+	typedef enum { NullPointer, EmptyString, FindMibFile, FileWithBom, EmptyFile, OpenFile,
+						MemoryMapping, QuotedString, NotLL1,
+						SyntaxError, SymbolNotFound, SymbolAlreadyExist, ShouldNotArrive, PopEmptyStack, CallbackNotFound,
 						SnmpValueNotFound, SnmpTypeNotFound, MibInvalidName, CreateFolder, RenameFile, CreateFile,
-						FileNotExist, FileAlreadyExist, CurrentFileSmaller, BadExtension
+						FileNotExist, FileAlreadyExist, CurrentFileSmaller, BadExtension,
+						BinaryFile, UnixEndOfLine, MacEndOfLine,
+						RuleNotExist, RuleNotCalled,
+						TextNotFound,
 	} ParserException_t;
 
 	ParserException(ParserException_t ident,
@@ -46,18 +50,62 @@ private:
 
 };
 
+class ParserExceptionTextNotFound : public ParserException
+{
+public:
+	inline ParserExceptionTextNotFound(int value)
+		: ParserException(TextNotFound, "Translation text not found for value %1", QString::number(value)) { }
+	inline ParserExceptionTextNotFound(const char * value)
+		: ParserException(TextNotFound, "Translation idx not found for value '%1'", value) { }
+};
+
+class ParserExceptionRuleNotCalled : public ParserException
+{
+public:
+	inline ParserExceptionRuleNotCalled(const QString & called)
+		: ParserException(RuleNotExist, "The rule '%1' is never called", called) { }
+};
+
+class ParserExceptionRuleNotExist : public ParserException
+{
+public:
+	inline ParserExceptionRuleNotExist(const QString & called, const QString & from)
+		: ParserException(RuleNotExist, "The rule '%1' called by '%2' does not exist", called, from) { }
+};
+
+class ParserExceptionMacEndOfLine : public ParserException
+{
+public:
+	ParserExceptionMacEndOfLine(void)
+		: ParserException(MacEndOfLine, "MIB file seems to be a MAC end of line file") { }
+};
+
+class ParserExceptionUnixEndOfLine : public ParserException
+{
+public:
+	ParserExceptionUnixEndOfLine(void)
+		: ParserException(UnixEndOfLine, "MIB file seems to be a UNIX end of line file") { }
+};
+
+class ParserExceptionBinaryFile : public ParserException
+{
+public:
+	ParserExceptionBinaryFile(int line)
+		: ParserException(BinaryFile, "MIB file contains binary char line %1", QString::number(line)) { }
+};
+
 class ParserExceptionNullPointer : public ParserException
 {
 public:
 	ParserExceptionNullPointer(void)
-		: ParserException(NullPointer, "Bug: Null pointer") { }
+		: ParserException(NullPointer, "Null pointer") { }
 };
 
 class ParserExceptionEmptyString : public ParserException
 {
 public:
 	ParserExceptionEmptyString(void)
-		: ParserException(EmptyString, "Bug: Empty string") { }
+		: ParserException(EmptyString, "Empty string") { }
 };
 
 class ParserExceptionFindMibFile : public ParserException
@@ -113,7 +161,7 @@ public:
 								 const QString callstack1,
 								 const QString & rule2,
 								 const QString callstack2)
-	: ParserException(NotLL1, "Bug: MIB File %1(%2), Token '%3', Match rule %4 in %5 and rule %6 in %7",
+	: ParserException(NotLL1, "MIB File %1(%2), Token '%3', Match rule %4 in %5 and rule %6 in %7",
 			 filename, QString::number(line), token, rule1, callstack1, rule2, callstack2) { }
 };
 
@@ -129,30 +177,37 @@ class ParserExceptionSymbolNotFound : public ParserException
 {
 public:
 	ParserExceptionSymbolNotFound(const QString & symbol, const QString & rule)
-		: ParserException(SymbolNotFound, "Bug: Unable to find symbol '%1' called from rule '%2'", symbol, rule) { }
+		: ParserException(SymbolNotFound, "Unable to find symbol '%1' called from rule '%2'", symbol, rule) { }
 	ParserExceptionSymbolNotFound(const QString & symbol)
-		: ParserException(SymbolNotFound, "Bug: Unable to find symbol '%1'", symbol) { }
+		: ParserException(SymbolNotFound, "Unable to find symbol '%1'", symbol) { }
+};
+
+class ParserExceptionSymbolAlreadyExist : public ParserException
+{
+public:
+	ParserExceptionSymbolAlreadyExist(const QString & symbol)
+		: ParserException(SymbolAlreadyExist, "Symbol '%1' is already existing'", symbol) { }
 };
 
 class ParserExceptionShouldNotArrive : public ParserException
 {
 public:
 	ParserExceptionShouldNotArrive(const QString & file, int line)
-		: ParserException(ShouldNotArrive, "Bug: Should not arrive in %1 line %2", file, QString::number(line)) { }
+		: ParserException(ShouldNotArrive, "Should not arrive in %1 line %2", file, QString::number(line)) { }
 };
 
 class ParserExceptionPopEmptyStack : public ParserException
 {
 public:
 	ParserExceptionPopEmptyStack(void)
-		: ParserException(PopEmptyStack, "Bug: Try to pop an empty stack") { }
+		: ParserException(PopEmptyStack, "Try to pop an empty stack") { }
 };
 
 class ParserExceptionCallbackNotFound : public ParserException
 {
 public:
 	ParserExceptionCallbackNotFound(const QString & rule)
-		: ParserException(CallbackNotFound, "Bug: Unable to find callback funtion for rule '%1'", rule) { }
+		: ParserException(CallbackNotFound, "Unable to find callback funtion for rule '%1'", rule) { }
 };
 
 class ParserExceptionSnmpValueNotFound : public ParserException

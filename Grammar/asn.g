@@ -64,6 +64,7 @@ tokens
 	Tok_MIN_ACCESS				= 'MIN-ACCESS' ;
 	Tok_MINUS_INFINITY		= 'MINUS-INFINITY' ;
 	Tok_MODULE_COMPLIANCE	= 'MODULE-COMPLIANCE' ;
+	Tok_MODULE_CONFORMANCE	= 'MODULE-CONFORMANCE' ;
 	Tok_MODULE_IDENTITY		= 'MODULE-IDENTITY' ;
 	Tok_MODULE					= 'MODULE' ;
 	Tok_NOTIFICATION_GROUP	= 'NOTIFICATION-GROUP' ;
@@ -117,7 +118,7 @@ fragment SPACE					: ' ' ;
 
 Tok_Lowercase					: UPPER ( UPPER | LOWER | DIGIT | '-' | '_' ) *
 									;
-									
+
 Tok_Uppercase					: LOWER ( UPPER | LOWER | DIGIT | '-' | '_' ) *
 									;
 
@@ -165,7 +166,7 @@ anyName							: Tok_Lowercase
 mibModule						: moduleName bitOrObjectIdentifierValue ? Tok_DEFINITIONS tagDefault ? Tok_ASSIGN Tok_BEGIN moduleBody Tok_END
 									;
 
-tagDefault						: ( Tok_EXPLICIT | Tok_IMPLICIT ) Tok_TAGS 
+tagDefault						: ( Tok_EXPLICIT | Tok_IMPLICIT ) Tok_TAGS
 									;
 
 moduleBody						: exportList ? importList ? assignmentList
@@ -194,7 +195,7 @@ assignment						: typeAssignment
 									| valueAssignment
 									| macroDefinition
 									;
-									
+
 macroDefinition				: macroReference Tok_MACRO Tok_ASSIGN macroBody
 									;
 
@@ -212,7 +213,7 @@ typeAssignment					: typeName Tok_ASSIGN type
 
 type								: tag ? explicitOrImplicitTag ? type1
 									;
-									
+
 type1								: builtinType
 									| definedType
 									| definedMacroType
@@ -260,7 +261,7 @@ bitStringType					: Tok_BIT Tok_STRING valueOrConstraintList ?
 
 bitsType							: Tok_BITS valueOrConstraintList ?
 									;
-									
+
 sequence							: Tok_SEQUENCE ( sequenceType | sequenceOfType )
 									;
 
@@ -269,7 +270,7 @@ sequenceType					: Tok_LEFT_BRACE elementTypeList ? Tok_RIGHT_BRACE
 
 sequenceOfType					: constraintList ? Tok_OF type
 									;
-									
+
 set								: Tok_SET ( setType | setOfType )
 									;
 
@@ -497,27 +498,29 @@ definedMacroType				: macroModuleIdentity
 									| macroObjectIdentity
 									| macroObjectType
 									| macroNotificationType
-									| macroTrapType
 									| macroTextualConvention
 									| macroObjectGroup
 									| macroNotificationGroup
 									| macroModuleCompliance
 									| macroAgentCapabilities
+									| macroTrapType
+									| macroModuleConformance
 									;
 
 definedMacroName				: Tok_MODULE_IDENTITY
 									| Tok_OBJECT_IDENTITY
 									| Tok_OBJECT_TYPE
 									| Tok_NOTIFICATION_TYPE
-									| Tok_TRAP_TYPE
 									| Tok_TEXTUAL_CONVENTION
 									| Tok_OBJECT_GROUP
 									| Tok_NOTIFICATION_GROUP
 									| Tok_MODULE_COMPLIANCE
 									| Tok_AGENT_CAPABILITIES
+									| Tok_TRAP_TYPE
+									| Tok_MODULE_CONFORMANCE
 									;
 
-macroModuleIdentity			: Tok_MODULE_IDENTITY snmpUpdatePart snmpOrganizationPart snmpContactPart snmpDescrPart snmpRevisionPart *
+macroModuleIdentity			: Tok_MODULE_IDENTITY snmpLastUpdatedPart snmpOrganizationPart snmpContactInfoPart snmpDescriptionPart snmpRevisionPart *
 									;
 
 macroObjectIdentity			: Tok_OBJECT_IDENTITY snmpStatusPart snmpDescrPart snmpReferPart ?
@@ -542,6 +545,9 @@ macroNotificationGroup		: Tok_NOTIFICATION_GROUP snmpNotificationsPart snmpStatu
 									;
 
 macroModuleCompliance		: Tok_MODULE_COMPLIANCE snmpStatusPart snmpDescrPart snmpReferPart ? snmpModulePart +
+									;
+
+macroModuleConformance		: Tok_MODULE_CONFORMANCE snmpUpdatePart snmpProductReleasePart snmpDescrPart snmpModulePart +
 									;
 
 macroAgentCapabilities		: Tok_AGENT_CAPABILITIES snmpProductReleasePart snmpStatusPart snmpDescrPart snmpReferPart ? snmpModuleSupportPart *

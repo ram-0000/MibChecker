@@ -55,7 +55,8 @@ QString ParserContextExec::CallStackStr(void) const
 	{
 		if(ret.length() != 0)
 			ret += "/";
-		ret += (*it)->Rule();
+		if(*it != nullptr)
+			ret += (*it)->Rule();
 	}
 	return ret;
 }

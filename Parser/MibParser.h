@@ -8,10 +8,8 @@
 class MibParser : public ParserGeneric
 {
 public:
-	MibParser(ParserAction & Callback, const QString & name) throw (ParserException);
+	MibParser(ParserAction & Callback, const QString & name);
 	virtual ~MibParser(void);
-
-	void Execute(void);
 
 	virtual bool NextToken(LexToken_t & token);
 
@@ -122,52 +120,61 @@ private:
 	void nameAndNumber2(void);
 	void definedMacroType(void);
 	void definedMacroName(void);
+
 	void macroModuleIdentity(void);
 	void macroObjectIdentity(void);
 	void macroObjectType(void);
 	void macroNotificationType(void);
-	void macroTrapType(void);
+
 	void macroTextualConvention(void);
+
 	void macroObjectGroup(void);
 	void macroNotificationGroup(void);
 	void macroModuleCompliance(void);
 	void macroAgentCapabilities(void);
-	void snmpUpdatePart(void);
-	void snmpOrganizationPart(void);
-	void snmpContactPart(void);
-	void snmpDescrPart(void);
-	void snmpRevisionPart(void);
-	void snmpStatusPart(void);
-	void snmpReferPart(void);
-	void snmpSyntaxPart(void);
-	void snmpUnitsPart(void);
-	void snmpAccessPart(void);
-	void snmpIndexPart(void);
-	void snmpIndexPart1(void);
-	void snmpIndexPart2(void);
-	void indexValueList(void);
-	void indexValue(void);
-	void indexValue1(void);
-	void indexValue2(void);
-	void indexType(void);
-	void snmpDefValPart(void);
-	void snmpObjectsPart(void);
-	void valueList(void);
-	void snmpEnterprisePart(void);
-	void snmpVarPart(void);
-	void snmpDisplayPart(void);
-	void snmpNotificationsPart(void);
-	void snmpModulePart(void);
-	void snmpModuleImport(void);
-	void snmpMandatoryPart(void);
-	void snmpCompliancePart(void);
-	void complianceGroup(void);
-	void complianceObject(void);
-	void snmpWriteSyntaxPart(void);
-	void snmpProductReleasePart(void);
-	void snmpModuleSupportPart(void);
-	void snmpVariationPart(void);
-	void snmpCreationPart(void);
+
+	void macroTrapType(void);
+	void macroModuleConformance(void);
+
+	void snmpLastUpdated(void);
+	void snmpOrganization(void);
+	void snmpContactInfo(void);
+	void snmpDescription(void);
+	void snmpRevision(void);
+	void snmpStatus(void);
+	void snmpReference(void);
+	void snmpAccess(void);
+	void snmpSyntax(void);
+	void snmpWriteSyntax(void);
+	void snmpUnits(void);
+	void snmpDisplayHint(void);
+	void snmpProductRelease(void);
+	void snmpCommaValues(void);
+
+	void snmpIndex(void);
+	void snmpIndex1(void);
+	void snmpIndex2(void);
+	void snmpIndex3(void);
+	void snmpIndexTypes(void);
+	void snmpIndexType(void);
+	void snmpDefVal(void);
+	void snmpObjects(void);
+	void snmpNotifications(void);
+	void snmpComplianceModule(void);
+	void snmpModuleName(void);
+	void snmpModuleIdentifier(void);
+	void snmpComplianceMandatory(void);
+	void snmpCompliance(void);
+	void snmpComplianceGroup(void);
+	void snmpComplianceObject(void);
+	void snmpAgentModule(void);
+	void snmpAgentSupport(void);
+	void snmpAgentInclude(void);
+	void snmpAgentVariation(void);
+	void snmpAgentObjectVariation(void);
+	void snmpCreationRequire(void);
+	void snmpEnterprise(void);
+	void snmpVariables(void);
 
 };
 

@@ -31,19 +31,35 @@ public slots:
 	void onCheck(void);
 	void onReload(void);
 	void onClear(void);
-	void onOpenInput(void);
-	void onOpenBad(void);
-	void onChooseInputFolder(void);
-	void onChooseBadFolder(void);
-	void onDefFolderChooser(void);
-	void onMibFolderChooser(void);
-	void onHtmlFolderChooser(void);
-	void onDefFolderOpen(void);
-	void onMibFolderOpen(void);
-	void onHtmlFolderOpen(void);
-	void onAlgorithmChanged(void);
 	void onCheckToBadFolder(void);
 	void onBadToCheckFolder(void);
+
+	void onInputFolderOpen(void);
+	void onInputFolderChoose(void);
+	void onInputFolderCmd(void);
+
+	void onBadFolderOpen(void);
+	void onBadFolderChoose(void);
+	void onBadFolderCmd(void);
+
+	void onOutputMibFolderChooser(void);
+	void onOutputMibFolderOpen(void);
+	void onOutputMibFolderCmd(void);
+
+	void onOutputHtmlFolderChooser(void);
+	void onOutputHtmlFolderOpen(void);
+	void onOutputHtmlFolderCmd(void);
+
+	void onOutputDefFolderChooser(void);
+	void onOutputDefFolderOpen(void);
+	void onOutputDefFolderCmd(void);
+
+	void onOutputIncFolderChooser(void);
+	void onOutputIncFolderOpen(void);
+	void onOutputIncFolderCmd(void);
+
+	void onAlgorithmChanged(void);
+
 	void onThreadStarted(int Max);
 	void onThreadRunning(int Current, const QString Mibname, const QString Error);
 	void onThreadFinished(void);

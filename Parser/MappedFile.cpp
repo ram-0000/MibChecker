@@ -1,7 +1,7 @@
 #include "MappedFile.h"
 #include "Debug.h"
 
-MappedFile::MappedFile(const QString & name) throw (ParserException)
+MappedFile::MappedFile(const QString & name)
 {
 	// save filename
 	m_file_name = name;

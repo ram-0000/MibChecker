@@ -10,7 +10,7 @@ class ParserGeneric;
 class ParserPow
 {
 public:
-	ParserPow(ParserGeneric * This, const char * RuleName) throw (ParserException);
+	ParserPow(ParserGeneric * This, const char * RuleName);
 	~ParserPow(void);
 
 	inline const char * Rule(void) const { return m_rule; }

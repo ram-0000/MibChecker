@@ -27,6 +27,9 @@ public:
 	inline static QString OutputDefFolder(void)		{ return String(ConfIdOutputDefFolder); }
 	inline static void OutputDefFolder(const QString & value) { String(ConfIdOutputDefFolder, value); }
 
+	inline static QString OutputIncFolder(void)		{ return String(ConfIdOutputIncFolder); }
+	inline static void OutputIncFolder(const QString & value) { String(ConfIdOutputIncFolder, value); }
+
 	inline static QString OutputHtmlFolder(void)		{ return String(ConfIdOutputHtmlFolder); }
 	inline static void OutputHtmlFolder(const QString & value) { String(ConfIdOutputHtmlFolder, value); }
 
@@ -39,8 +42,14 @@ public:
 	inline static QString EditorPath(void)				{ return String(ConfIdEditorPath); }
 	inline static void EditorPath(const QString & value) { String(ConfIdEditorPath, value); }
 
+	inline static QString CmdPath(void)				{ return String(ConfIdCmdPath); }
+	inline static void CmdPath(const QString & value) { String(ConfIdCmdPath, value); }
+
 	inline static QString MibExtension(void)			{ return String(ConfIdMibExtension); }
 	inline static void MibExtension(const QString & value) { String(ConfIdMibExtension, value); }
+
+	inline static QString IncExtension(void)			{ return String(ConfIdIncExtension); }
+	inline static void IncExtension(const QString & value) { String(ConfIdIncExtension, value); }
 
 	inline static QString DefExtension(void)			{ return String(ConfIdDefExtension); }
 	inline static void DefExtension(const QString & value) { String(ConfIdDefExtension, value); }
@@ -68,12 +77,15 @@ private:
 						ConfIdInputFolder,
 						ConfIdBadFolder,
 						ConfIdOutputDefFolder,
+						ConfIdOutputIncFolder,
 						ConfIdOutputHtmlFolder,
 						ConfIdOutputMibFolder,
 						ConfIdWndMainGeometry,
 						ConfIdWndMainState,
 						ConfIdEditorPath,
+						ConfIdCmdPath,
 						ConfIdMibExtension,
+						ConfIdIncExtension,
 						ConfIdDefExtension,
 						ConfIdHtmlExtension,
 						ConfIdOverwriteAlgorithm,

@@ -47,6 +47,10 @@ QString MibFolder::BuildMibFile(const QString & mib_filename)
 	m_output_html_filename += MibName();
 	m_output_html_filename += Conf::HtmlExtension();
 
+	m_output_inc_folder = Conf::OutputIncFolder();
+	m_output_inc_folder += "/";
+	m_output_inc_folder += MibName()[0];
+
 	// build filename
 	// 1st, we try to find MIB file in local repository
 	QFileInfo check_file1(OutputMibFileName());
