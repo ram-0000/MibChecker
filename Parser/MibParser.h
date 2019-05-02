@@ -78,6 +78,7 @@ private:
 	void constraintList(void);
 	void constraint(void);
 	void valueConstraintList(void);
+	void valueConstraintListOpt(void);
 	void valueConstraint(void);
 	void valueRange(void);
 	void lowerEndPoint(void);

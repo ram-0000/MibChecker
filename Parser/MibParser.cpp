@@ -91,6 +91,7 @@ void MibParser::_generate(void)
 	constraintList();
 	constraint();
 	valueConstraintList();
+	valueConstraintListOpt();
 	valueConstraint();
 	valueRange();
 	lowerEndPoint();
@@ -716,10 +717,20 @@ void MibParser::valueConstraintList(void)
 {
 	ParserPow pow(this, "valueConstraintList");
 	Cardinal_1(pow, Tok_LEFT_PAREN, "valueConstraint");
-	Cardinal_0_n(pow, Tok_VERTICAL_BAR, "valueConstraint");
+	Cardinal_0_n(pow, "valueConstraintListOpt");
 	Cardinal_1(pow, Tok_RIGHT_PAREN);
-//valueConstraintList: Tok_LEFT_PAREN valueConstraint ( Tok_VERTICAL_BAR valueConstraint ) * Tok_RIGHT_PAREN
+//valueConstraintList: Tok_LEFT_PAREN valueConstraint ( valueConstraintList ) * Tok_RIGHT_PAREN
 }
+
+void MibParser::valueConstraintListOpt(void)
+{
+	ParserPow pow(this, "valueConstraintListOpt");
+	Cardinal_1(pow, Tok_VERTICAL_BAR);
+	Call(pow);
+	Cardinal_1(pow, "valueConstraint");
+//valueConstraintListOpt: Tok_VERTICAL_BAR valueConstraint
+}
+
 
 void MibParser::valueConstraint(void)
 {

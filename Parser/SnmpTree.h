@@ -122,6 +122,7 @@ private:
 	inline void On_lowerEndPoint(int, ParserValue & Value) { m_tmp_type_ptr->addTypeExtended(Value.get()); }
 	inline void On_upperEndPoint(int, ParserValue & Value) { m_tmp_type_ptr->addTypeExtended(".."); m_tmp_type_ptr->addTypeExtended(Value.get()); }
 	void On_sizeConstraint(int order, ParserValue & Value);
+	void On_valueConstraintListOpt(int, ParserValue &) { m_tmp_type_ptr->addTypeExtended("|"); }
 
 	void On_valueAssignment(int order, ParserValue & Value);
 	void On_typeAssignment(int order, ParserValue & Value);

@@ -185,6 +185,7 @@ SnmpTree::Jump_t SnmpTree::m_tbl_jump[] =
 	{ "type1", &SnmpTree::On_type1 },
 	{ "sizeConstraint", &SnmpTree::On_sizeConstraint },
 	{ "constraint", &SnmpTree::On_constraint },
+	{ "valueConstraintListOpt", &SnmpTree::On_valueConstraintListOpt },
 
 };
 
